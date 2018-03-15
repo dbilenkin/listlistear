@@ -11,6 +11,16 @@ class HostWait extends Component {
       <div>
         <h2>Round {this.props.round}</h2>
         <h3>Waiting for everyone to finish answering...</h3>
+        <ul>
+          {/* Render the list of players */
+            this.props.players.filter(player => player.answers).map(player => (
+              <li
+                key={player.id}
+              >
+                {player.name}
+              </li>
+            ))}
+        </ul>
       </div>
     );
   }

@@ -27,6 +27,7 @@ class HostGame extends Component {
     let numPlayersAnswered = 0;
     this.state.players.forEach(player => {
       if (player.answers && player.answers[this.state.round]) {
+        player.answered = true;
         numPlayersAnswered++;
       }
     });
@@ -52,7 +53,7 @@ class HostGame extends Component {
     gameRef.on("value", snapshot => {
       let newplayers = [];
       let playersSnapshot = snapshot.child("players");
-      playersSnapshot.forEach(function(child) {
+      playersSnapshot.forEach(function (child) {
         newplayers.push({
           name: child.val().name,
           points: child.val().points,
@@ -69,10 +70,6 @@ class HostGame extends Component {
       let state = snapshot.val();
       if (state !== this.state.state) {
         this.setState({ state: state });
-        console.log("HostGame state: " + state);
-        this.props.history.push(
-          "/host/game/" + this.state.gameId + "/" + state
-        );
       }
     });
   }
@@ -80,22 +77,10 @@ class HostGame extends Component {
     return (
       <div>
         <h1>{this.state.gameId}</h1>
-        <Route
-          path={"/host/game/" + this.state.gameId + "/setup"}
-          component={() => <HostSetup {...this.state} />}
-        />
-        <Route
-          path={"/host/game/" + this.state.gameId + "/answer"}
-          component={() => <HostAnswer {...this.state} />}
-        />
-        <Route
-          path={"/host/game/" + this.state.gameId + "/wait"}
-          component={() => <HostWait {...this.state} />}
-        />
-        <Route
-          path={"/host/game/" + this.state.gameId + "/result"}
-          component={() => <HostResult {...this.state} />}
-        />
+        {this.state.state === 'setup' && (<HostSetup {...this.state} />)}
+        {this.state.state === 'answer' && (<HostAnswer {...this.state} />)}
+        {this.state.state === 'wait' && (<HostWait {...this.state} />)}
+        {this.state.state === 'result' && (<HostResult {...this.state} />)}
       </div>
     );
   }
