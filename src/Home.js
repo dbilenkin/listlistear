@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import HostGame from "./HostGame";
-import PlayerGame from "./PlayerGame";
 
 function createNewGame() {
   return Math.floor(Math.random() * 100);
@@ -13,10 +11,10 @@ const HostButton = ({ title, id, history }) => (
   </button>
 );
 
-const JoinButton = (props) => (
+const JoinButton = props => (
   <button
     type="button"
-    onClick={() => props.history.push("player/game/" + props.id)}
+    onClick={() => props.history.push("player/game/" + props.id + "/" + props.name)}
   >
     Join Game
   </button>
@@ -31,19 +29,27 @@ const CreateGame = () => (
   />
 );
 
-const JoinGame = (parentProps) => (
+const JoinGame = parentProps => (
   <div>
     <label>
       Game Id:
       <input
         type="text"
-        value={parentProps.id}
-        onChange={parentProps.onChange}
+        value={parentProps.gameId}
+        onChange={parentProps.onGameChange}
+      />
+    </label>
+    <label>
+      Name:
+      <input
+        type="text"
+        value={parentProps.name}
+        onChange={parentProps.onNameChange}
       />
     </label>
     <Route
       path="/"
-      render={props => <JoinButton {...props} id={parentProps.id} />}
+      render={props => <JoinButton {...props} id={parentProps.gameId} name={parentProps.name}/>}
     />
   </div>
 );
@@ -52,21 +58,26 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameId: ""
+      gameId: "",
+      name: ""
     };
 
-    this.handlePickGame = this.handlePickGame.bind(this);
+    //this.handlePickGame = this.handlePickGame.bind(this);
   }
 
-  handlePickGame(event) {
+  pickGame = event => {
     this.setState({ gameId: event.target.value });
-  }
+  };
+
+  pickName = event => {
+    this.setState({ name: event.target.value });
+  };
 
   render() {
     return (
       <div>
         <CreateGame />
-        <JoinGame id={this.state.gameId} onChange={this.handlePickGame} />
+        <JoinGame {...this.state} onGameChange={this.pickGame} onNameChange={this.pickName}/>
       </div>
     );
   }

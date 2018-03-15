@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import HostGame from "./HostGame";
-import PlayerGame from "./PlayerGame";
+import HostGame from "./host/HostGame";
+import PlayerGame from "./player/PlayerGame";
 import Home from "./Home";
 
 const App = () => (
@@ -15,7 +15,7 @@ const App = () => (
       <hr />
       <Route exact path="/" component={Home} />
       <Route path="/host/game/:id" component={HostGame} />
-      <Route path="/player/game/:id" component={PlayerGame} />
+      <Route path="/player/game/:id/:name" component={PlayerGame} />
     </div>
   </Router>
 
