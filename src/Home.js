@@ -1,23 +1,40 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import TextField from "material-ui/TextField";
+import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
+import Paper from "material-ui/Paper";
+import Grid from "material-ui/Grid";
+import Button from "material-ui/Button";
 
 function createNewGame() {
   return Math.floor(Math.random() * 100);
 }
 
 const HostButton = ({ title, id, history }) => (
-  <button type="button" onClick={() => history.push("host/game/" + id)}>
-    {title}
-  </button>
+  <Button
+    variant="raised"
+    label="{title}"
+    color="primary"
+    style={{ margin: 12 }}
+    onClick={() => history.push("host/game/" + id)}
+  >
+    Host Game
+  </Button>
 );
 
 const JoinButton = props => (
-  <button
-    type="button"
-    onClick={() => props.history.push("player/game/" + props.id + "/" + props.name)}
+  <Button
+    variant="raised"
+    label="{title}"
+    color="primary"
+    style={{ margin: 12 }}
+    onClick={() =>
+      props.history.push("player/game/" + props.id + "/" + props.name)
+    }
   >
     Join Game
-  </button>
+  </Button>
 );
 
 const CreateGame = () => (
@@ -31,28 +48,40 @@ const CreateGame = () => (
 
 const JoinGame = parentProps => (
   <div>
-    <label>
-      Game Id:
-      <input
-        type="text"
-        value={parentProps.gameId}
-        onChange={parentProps.onGameChange}
-      />
-    </label>
-    <label>
-      Name:
-      <input
-        type="text"
-        value={parentProps.name}
-        onChange={parentProps.onNameChange}
-      />
-    </label>
+    <TextField
+      label="Game Id"
+      value={parentProps.gameId}
+      onChange={parentProps.onGameChange}
+    />
+    <TextField
+      label="Name"
+      value={parentProps.name}
+      onChange={parentProps.onNameChange}
+    />
     <Route
       path="/"
-      render={props => <JoinButton {...props} id={parentProps.gameId} name={parentProps.name}/>}
+      render={props => (
+        <JoinButton
+          {...props}
+          id={parentProps.gameId}
+          name={parentProps.name}
+        />
+      )}
     />
   </div>
 );
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  paper: {
+    height: "100px",
+    padding: theme.spacing.unit * 2,
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  }
+});
 
 class Home extends Component {
   constructor(props) {
@@ -74,13 +103,40 @@ class Home extends Component {
   };
 
   render() {
+    const { classes } = this.props;
+    const { spacing } = this.state;
     return (
-      <div>
-        <CreateGame />
-        <JoinGame {...this.state} onGameChange={this.pickGame} onNameChange={this.pickName}/>
+      <div className={classes.root}>
+        <Grid
+          container
+          spacing={16}
+          alignItems="center"
+          direction="row"
+          justify="center"
+        >
+          <Grid item xs={12}>
+            <Grid container justify="center" alignItems="center" direction="column">
+              <Grid item>
+                <CreateGame />
+              </Grid>
+
+              <Grid item>
+                <JoinGame
+                  {...this.state}
+                  onGameChange={this.pickGame}
+                  onNameChange={this.pickName}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </div>
     );
   }
 }
 
-export default Home;
+Home.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(Home);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import fire from "../fire";
 import PlayerSetup from "./PlayerSetup";
+import PlayerChoice from "./PlayerChoice";
 import PlayerAnswer from "./PlayerAnswer";
 import PlayerWait from "./PlayerWait";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -16,8 +17,9 @@ class PlayerGame extends Component {
       currentPlayer: null,
       firstPlayer: false,
       answers: [],
-      answersSubmitted: false,
+      choices: [],
       numAnswers: 3,
+      numChoices: 3,
       round: 0,
       gameId: props.match.params.id
     };
@@ -49,22 +51,51 @@ class PlayerGame extends Component {
         console.log("answersSubmitted: " + this.state.answersSubmitted);
 
         let answers = null;
+        let choices = null;
         if (this.state.key) {
           answers = snapshot
             .child("players")
             .child(this.state.key)
             .child("answers")
             .val();
+
+          choices = snapshot
+            .child("players")
+            .child(this.state.key)
+            .child("choices")
+            .val();
         }
 
-        console.log(answers);
-
-        if (state !== "wait" || answers) {
+        if (state.split(".")[0] !== "wait") {
+          this.setState({ state: state });
+        } else if (
+          (state == "wait.choice" && choices) ||
+          (state == "wait.answer" && answers)
+        ) {
           this.setState({ state: state });
         }
       }
     });
   }
+
+  changeChoice = id => event => {
+    let choices = this.state.choices;
+    choices[id] = event.target.value;
+    this.setState({ choices: choices });
+  };
+
+  submitChoices = e => {
+    e.preventDefault();
+    let gameRef = fire.database().ref(this.state.gameId);
+
+    gameRef
+      .child("players")
+      .child(this.state.key)
+      .child("choices")
+      .update({ [this.state.round]: this.state.choices });
+
+    gameRef.update({ state: "wait.choice" });
+  };
 
   changeAnswer = id => event => {
     let answers = this.state.answers;
@@ -75,15 +106,14 @@ class PlayerGame extends Component {
   submitAnswers = e => {
     e.preventDefault();
     let gameRef = fire.database().ref(this.state.gameId);
-    this.setState({ answersSubmitted: true });
-    console.log("submitAnswers state: " + JSON.stringify(this.state));
+
     gameRef
       .child("players")
       .child(this.state.key)
       .child("answers")
       .update({ [this.state.round]: this.state.answers });
 
-    gameRef.update({ state: "wait" });
+    gameRef.update({ state: "wait.answer" });
   };
 
   changeName = event => {
@@ -130,7 +160,7 @@ class PlayerGame extends Component {
     fire
       .database()
       .ref(this.state.gameId)
-      .update({ state: "answer" });
+      .update({ state: "choice" });
   };
 
   handleDelete(key) {
@@ -155,6 +185,13 @@ class PlayerGame extends Component {
             readyToStart={this.readyToStart}
           />
         )}
+        {this.state.state === "choice" && (
+          <PlayerChoice
+            {...this.state}
+            changeChoice={this.changeChoice.bind(this)}
+            submitChoices={this.submitChoices.bind(this)}
+          />
+        )}
         {this.state.state === "answer" && (
           <PlayerAnswer
             {...this.state}
@@ -162,7 +199,9 @@ class PlayerGame extends Component {
             submitAnswers={this.submitAnswers.bind(this)}
           />
         )}
-        {this.state.state === "wait" && <PlayerWait {...this.state} />}
+        {this.state.state.split(".")[0] === "wait" && (
+          <PlayerWait {...this.state} />
+        )}
       </div>
     );
   }
