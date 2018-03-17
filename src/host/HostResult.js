@@ -35,12 +35,12 @@ const HostResult = (props) => {
       <div className={classes.root}>
         <Grid container spacing={24}>
           {props.players.map(player => (
-            <Grid item xs>
+            <Grid key={player.name} item xs>
               <Paper className={classes.paper}>
               <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Choice</TableCell>
+                <TableCell>{player.name}'s Choices</TableCell>
                 <TableCell numeric>Points</TableCell>
               </TableRow>
             </TableHead>
