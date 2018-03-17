@@ -67,12 +67,20 @@ class HostGame extends Component {
     }
   }
 
+  /**
+   * 5 points for 1st
+   * 3 points for 2nd
+   * 1 point for 3rd
+   */
   calculateResults() {
     this.state.players.forEach(player => {
       let points = 0;
-      player.answers.forEach(answer => {
+      for (const [index, value] of player.answers.slice(0,3).entries()) {
+        console.log(index, value);
+        let choicePoints = 5 - (index * 2);
+        let choice = this.state.choices.filter(e => e.choice === value)[0];
         
-      })
+      }
     });
   }
 
