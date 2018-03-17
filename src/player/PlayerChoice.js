@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import fire from "../fire";
+import TextField from "material-ui/TextField";
+import Button from "material-ui/Button";
 
 class PlayerChoice extends Component {
   constructor(props) {
@@ -10,23 +12,27 @@ class PlayerChoice extends Component {
   render() {
     return (
       <div>
-        {this.props.currentPlayer && (
-          <h2>Welcome, {this.props.currentPlayer.name}</h2>
-        )}
-        <h2>Round: {this.props.round}</h2>
-        <form onSubmit={this.props.submitChoices}>
-          {[...Array(this.props.numChoices)].map((_,i) => (
-            <input
-              key={i}
-              id={i}
-              type="text"
-              value={this.props.choices[i]}
-              onChange={this.props.changeChoice(i)}
-            />
-          ))}
 
-          <input type="submit" />
-        </form>
+        <h2>Round: {this.props.round}</h2>
+        {this.props.currentPlayer && (
+          <h2>Alright, {this.props.currentPlayer.name}</h2>
+        )}
+
+        <TextField
+          label="Type Something"
+          value={this.props.choice}
+          onChange={this.props.changeChoice}
+        />
+        <Button
+          variant="raised"
+          label="{title}"
+          color="primary"
+          style={{ margin: 12 }}
+          onClick={this.props.submitChoice}
+        >
+          Submit Choice
+        </Button>
+
       </div>
     );
   }

@@ -13,10 +13,12 @@ class HostGame extends Component {
     super(props);
     this.state = {
       players: [],
+      choices: [],
       state: "",
       round: 0,
       numAnswers: 3,
-      numChoices: 3,
+      numChoices: 10,
+      choiceTime: 30,
       gameId: props.match.params.id
     };
 
@@ -36,8 +38,7 @@ class HostGame extends Component {
     });
 
     if (
-      this.state.players.length > 0 &&
-      numPlayersChoiced === this.state.players.length
+      numPlayersChoiced >= this.state.numChoices
     ) {
       fire
         .database()
@@ -85,19 +86,33 @@ class HostGame extends Component {
     gameRef.on("value", snapshot => {
       let newplayers = [];
       let playersSnapshot = snapshot.child("players");
-      playersSnapshot.forEach(function (child) {
+      playersSnapshot.forEach(function (player) {
         newplayers.push({
-          name: child.val().name,
-          points: child.val().points,
-          answers: child.val().answers,
-          choices: child.val().choices,
-          id: child.key
+          name: player.val().name,
+          points: player.val().points,
+          answers: player.val().answers,
+          choices: player.val().choices,
+          id: player.key
         });
       });
-      console.log(newplayers);
       this.setState({ players: newplayers });
 
+      let newchoices = [];
+      let choicesSnapshot = snapshot.child("choices").child(this.state.round);
+      choicesSnapshot.forEach(function (choice) {
+        newchoices.push({
+          choice: choice.key,
+          playerKeys: choice.val()
+        });
+      });
+      this.setState({ choices: newchoices });
+
       if (this.state.state === 'choice' || this.state.state === 'wait.choice') {
+
+        setTimeout(() => {
+          gameRef.update({ state: "answer" });
+        }, this.state.choiceTime * 1000)
+
         this.checkChoices();
       } else if (this.state.state === 'answer' || this.state.state === 'wait.answer') {
         this.checkAnswers();
@@ -118,8 +133,8 @@ class HostGame extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>{this.state.gameId}</h1>
+      <div style={{textAlign: 'center'}}>
+        <h1>Game {this.state.gameId}</h1>
         {this.state.state === 'setup' && (<HostSetup {...this.state} />)}
         {this.state.state === 'choice' && (<HostChoice {...this.state} />)}
         {this.state.state === 'answer' && (<HostAnswer {...this.state} />)}

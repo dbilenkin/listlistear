@@ -1,30 +1,38 @@
 import React, { Component } from "react";
 import fire from "../fire";
+import FuzzySet from "fuzzyset.js"
 import PlayerSetup from "./PlayerSetup";
 import PlayerChoice from "./PlayerChoice";
 import PlayerAnswer from "./PlayerAnswer";
 import PlayerWait from "./PlayerWait";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Reorder, {
+  reorder,
+  reorderImmutable,
+  reorderFromTo,
+  reorderFromToImmutable
+} from 'react-reorder';
 
 class PlayerGame extends Component {
   constructor(props) {
     console.log(props);
     super(props);
+    this.gameRef = fire.database().ref(props.match.params.id)
     this.state = {
       state: "",
       name: props.match.params.name,
       key: "",
       currentPlayer: null,
       firstPlayer: false,
+      choice: '',
       answers: [],
       choices: [],
       numAnswers: 3,
       numChoices: 3,
       round: 0,
-      gameId: props.match.params.id
+      gameId: props.match.params.id,
+      fuzzyConstant: .5
     };
-
-    //this.changeName = this.changeName.bind(this);
   }
 
   createPlayer(name) {
@@ -38,11 +46,10 @@ class PlayerGame extends Component {
   }
 
   componentWillMount() {
-    let gameRef = fire.database().ref(this.state.gameId);
 
     this.addPlayer();
 
-    gameRef.on("value", snapshot => {
+    this.gameRef.on("value", snapshot => {
       let state = snapshot.child("state").val();
       console.log("PlayerGame state: " + state);
       console.log(this.props);
@@ -51,7 +58,7 @@ class PlayerGame extends Component {
         console.log("answersSubmitted: " + this.state.answersSubmitted);
 
         let answers = null;
-        let choices = null;
+        let allChoices = [];
         if (this.state.key) {
           answers = snapshot
             .child("players")
@@ -59,17 +66,19 @@ class PlayerGame extends Component {
             .child("answers")
             .val();
 
-          choices = snapshot
-            .child("players")
-            .child(this.state.key)
+          let choices = snapshot
             .child("choices")
-            .val();
+            .child(this.state.round)
+
+          choices.forEach(choice => {
+            allChoices.push(choice.key);
+          })
         }
+        this.setState({ choices: allChoices, answers: allChoices });
 
         if (state.split(".")[0] !== "wait") {
           this.setState({ state: state });
         } else if (
-          (state == "wait.choice" && choices) ||
           (state == "wait.answer" && answers)
         ) {
           this.setState({ state: state });
@@ -78,24 +87,49 @@ class PlayerGame extends Component {
     });
   }
 
-  changeChoice = id => event => {
-    let choices = this.state.choices;
-    choices[id] = event.target.value;
-    this.setState({ choices: choices });
+  changeChoice = event => {
+    this.setState({ choice: event.target.value });
   };
 
-  submitChoices = e => {
-    e.preventDefault();
-    let gameRef = fire.database().ref(this.state.gameId);
+  submitChoice = e => {
 
-    gameRef
-      .child("players")
-      .child(this.state.key)
-      .child("choices")
-      .update({ [this.state.round]: this.state.choices });
+    let choice = this.state.choice.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+    this.setState({choice: ''});
 
-    gameRef.update({ state: "wait.choice" });
+    let choicesRef = this.gameRef.child("choices").child(this.state.round);
+
+    let fuzzyChoices = FuzzySet();
+
+    choicesRef.once("value", choices => {
+      choices.forEach(choice => {
+        fuzzyChoices.add(choice.key)
+      });
+
+      let fuzzyChoice = fuzzyChoices.get(choice);
+      console.log(fuzzyChoice);
+      if (fuzzyChoice && fuzzyChoice[0][0] > this.state.fuzzyConstant) {
+        choice = fuzzyChoice[0][1]; //matches existing
+      } 
+      choicesRef.child(choice).push(this.state.key);
+
+      this.gameRef
+        .child("players")
+        .child(this.state.key)
+        .child("choices")
+        .child(this.state.round)
+        .push(choice);
+
+      //this.gameRef.update({ state: "wait.choice" });
+    });
+
+
   };
+
+  onReorder(event, previousIndex, nextIndex, fromId, toId) {
+    this.setState({
+      answers: reorder(this.state.answers, previousIndex, nextIndex)
+    });
+  }
 
   changeAnswer = id => event => {
     let answers = this.state.answers;
@@ -105,15 +139,14 @@ class PlayerGame extends Component {
 
   submitAnswers = e => {
     e.preventDefault();
-    let gameRef = fire.database().ref(this.state.gameId);
 
-    gameRef
+    this.gameRef
       .child("players")
       .child(this.state.key)
       .child("answers")
       .update({ [this.state.round]: this.state.answers });
 
-    gameRef.update({ state: "wait.answer" });
+    this.gameRef.update({ state: "wait.answer" });
   };
 
   changeName = event => {
@@ -123,18 +156,13 @@ class PlayerGame extends Component {
   };
 
   addPlayer() {
-    //e.preventDefault(); // <- prevent form submit from reloading the page
-    /* Send the player to Firebase */
-
-    console.log("state: " + JSON.stringify(this.state));
-    let gameRef = fire.database().ref(this.state.gameId);
 
     let player = this.createPlayer(this.state.name);
     console.log("name: " + this.state.name);
     let name = this.state.name;
     let playerString = JSON.stringify(player);
     console.log("player: " + playerString);
-    gameRef
+    this.gameRef
       .child("players")
       .push(player)
       .then(snap => {
@@ -143,10 +171,10 @@ class PlayerGame extends Component {
       });
     let that = this;
 
-    gameRef
+    this.gameRef
       .orderByKey()
       .limitToFirst(1)
-      .once("value", function(snap) {
+      .once("value", function (snap) {
         console.log(snap.val());
         if (
           Object.values(Object.values(snap.val())[0])[0].name === player.name
@@ -157,25 +185,18 @@ class PlayerGame extends Component {
   }
 
   readyToStart = () => {
-    fire
-      .database()
-      .ref(this.state.gameId)
-      .update({ state: "choice" });
+    this.gameRef.update({ state: "choice" });
   };
 
   handleDelete(key) {
     console.log(key);
-    fire
-      .database()
-      .ref(this.state.gameId)
-      .child(key)
-      .remove();
+    this.gameRef.child(key).remove();
   }
 
   render() {
     let baseUrl = "/player/game/" + this.state.gameId + "/" + this.state.name;
     return (
-      <div>
+      <div style={{textAlign: 'center'}}>
         <h1>{this.state.gameId}</h1>
         {this.state.state === "setup" && (
           <PlayerSetup
@@ -189,7 +210,7 @@ class PlayerGame extends Component {
           <PlayerChoice
             {...this.state}
             changeChoice={this.changeChoice.bind(this)}
-            submitChoices={this.submitChoices.bind(this)}
+            submitChoice={this.submitChoice.bind(this)}
           />
         )}
         {this.state.state === "answer" && (
@@ -197,6 +218,7 @@ class PlayerGame extends Component {
             {...this.state}
             changeAnswer={this.changeAnswer.bind(this)}
             submitAnswers={this.submitAnswers.bind(this)}
+            onReorder={this.onReorder.bind(this)}
           />
         )}
         {this.state.state.split(".")[0] === "wait" && (

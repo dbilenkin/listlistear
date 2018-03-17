@@ -7,6 +7,8 @@ import Paper from "material-ui/Paper";
 import Grid from "material-ui/Grid";
 import Button from "material-ui/Button";
 
+import ListFun from "./ListFun";
+
 function createNewGame() {
   return Math.floor(Math.random() * 100);
 }
@@ -53,11 +55,13 @@ const JoinGame = parentProps => (
       value={parentProps.gameId}
       onChange={parentProps.onGameChange}
     />
+    <br/>
     <TextField
       label="Name"
       value={parentProps.name}
       onChange={parentProps.onNameChange}
     />
+    <br/>
     <Route
       path="/"
       render={props => (
@@ -120,12 +124,15 @@ class Home extends Component {
                 <CreateGame />
               </Grid>
 
-              <Grid item>
+              <Grid item style={{textAlign: 'center'}}>
                 <JoinGame
                   {...this.state}
                   onGameChange={this.pickGame}
                   onNameChange={this.pickName}
                 />
+              </Grid>
+              <Grid item>
+                {/* <ListFun /> */}
               </Grid>
             </Grid>
           </Grid>
