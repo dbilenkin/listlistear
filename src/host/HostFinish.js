@@ -29,50 +29,29 @@ const styles = theme => ({
   }
 });
 
-const HostResult = props => {
+const HostFinish = props => {
   const { classes } = props;
 
   return (
     <div>
-      <h2>Round {props.round} Results</h2>
+      <h2>Game Over!</h2>
       <div className={classes.root}>
-        <Grid container spacing={8}>
-        <Grid key="results" item xs>
-              <Paper className={classes.paper}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Overall Results</TableCell>
-                      <TableCell numeric>Points</TableCell>
-                      <TableCell>Player</TableCell>
-
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {props.results.map(result => (
-                      <TableRow key={result[0]}>
-                        <TableCell>{result[0]}</TableCell>
-                        <TableCell numeric>{result[1].points}</TableCell>
-                        <TableCell numeric>{result[1].players}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </Grid>
+        <Grid container spacing={24}>
           {props.players.map(player => (
-            <Grid key={player.name} item xs={2}>
+            <Grid key={player.name} item xs>
               <Paper className={classes.paper}>
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
-                      <TableCell>{player.name}'s Choices -  {player.points} Points</TableCell>
+                      <TableCell>{player.name}'s Choices</TableCell>
+                      <TableCell numeric>{player.points} Points</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {player.answers[props.round].slice(0,3).map(answer => (
+                    {player.answers[props.round].map(answer => (
                       <TableRow key={answer}>
                         <TableCell>{answer}</TableCell>
+                        <TableCell numeric>{player.points}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -86,8 +65,8 @@ const HostResult = props => {
   );
 };
 
-HostResult.propTypes = {
+HostFinish.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(HostResult);
+export default withStyles(styles)(HostFinish);

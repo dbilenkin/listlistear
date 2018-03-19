@@ -9,7 +9,7 @@ class HostChoice extends Component {
     return (
       <div>
         <h2>Round {this.props.round}</h2>
-        <h3>Everyone list your top {this.props.numChoices} favorite beatles songs!</h3>
+        <h3>{this.props.questions[this.props.round]}</h3>
       </div>
     );
   }

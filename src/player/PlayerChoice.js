@@ -14,14 +14,14 @@ class PlayerChoice extends Component {
       <div>
 
         <h2>Round: {this.props.round}</h2>
-        {this.props.currentPlayer && (
-          <h2>Alright, {this.props.currentPlayer.name}</h2>
-        )}
+        <h2>Alright, {this.props.name}</h2>
+        <h3>{this.props.questions[this.props.round]}</h3>
 
         <TextField
           label="Type Something"
           value={this.props.choice}
           onChange={this.props.changeChoice}
+          autoFocus={true}
         />
         <Button
           variant="raised"
