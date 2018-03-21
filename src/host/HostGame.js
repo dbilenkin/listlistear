@@ -18,9 +18,21 @@ class HostGame extends Component {
       "Who is the best villain?"
     ];
 
+    const colors = [
+      'darkyellow',
+      'green',
+      'red',
+      'darkblue',
+      'blueviolet',
+      'beige',
+      'coral',
+      'aquamarine'
+    ]
+
     console.log(props);
     super(props);
     this.state = {
+      colors: colors.sort(() => Math.random() - 0.5),
       questions: questions,
       players: [],
       choices: [],
@@ -30,6 +42,7 @@ class HostGame extends Component {
       numAnswers: 3,
       numChoices: 10,
       choiceTime: 30,
+      maxPlayers: 8,
       gameId: props.match.params.id
     };
 
@@ -106,14 +119,18 @@ class HostGame extends Component {
 
       let newplayers = [];
       let playersSnapshot = snapshot.child("players");
+      let playerCount = 0;
+      let that = this;
       playersSnapshot.forEach(function(player) {
         newplayers.push({
           name: player.val().name,
           points: player.val().points,
           answers: player.val().answers,
           choices: player.val().choices,
+          color: that.state.colors[playerCount],
           id: player.key
         });
+        playerCount++;
       });
       this.setState({ players: newplayers });
 
@@ -161,7 +178,8 @@ class HostGame extends Component {
   render() {
     return (
       <div className="container" style={{ textAlign: "center" }}>
-        <h1>Game {this.state.gameId}</h1>
+        <a href="/host" className="back-button">Back</a>
+        <div className="title game-title">Game {this.state.gameId}</div>
         {this.state.state === "setup" && <HostSetup {...this.state} />}
         {this.state.state === "choice" && <HostChoice {...this.state} />}
         {this.state.state === "answer" && <HostAnswer {...this.state} />}
