@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
+import { Motion, spring } from 'react-motion';
+//import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
+
 
 const styles = theme => ({
   root: {
@@ -17,6 +21,16 @@ const styles = theme => ({
   },
 });
 
+const Fade = ({ children, ...props }) => (
+  <CSSTransition
+    {...props}
+    timeout={1000}
+    classNames="fade"
+  >
+    {children}
+  </CSSTransition>
+);
+
 class HostSetup extends Component {
   constructor(props) {
     console.log("HostSetup: " + JSON.stringify(props));
@@ -28,26 +42,15 @@ class HostSetup extends Component {
     return (
 
       <div>
-        <h2>Players:</h2>
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Player</TableCell>
-                <TableCell>Something</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.props.players.map(player => (
-                <TableRow key={player.id}>
-                  <TableCell>{player.name}</TableCell>
-                  <TableCell>something else</TableCell>
-                </TableRow>
-                )
-              )}
-            </TableBody>
-          </Table>
-        </Paper>
+        <TransitionGroup className='todo-list'>
+          {this.props.players.map(player => (
+            <Fade key={player.id}>
+              <div>
+                {`${player.name} `}
+              </div>
+            </Fade>
+          ))}
+        </TransitionGroup>
 
       </div>
     );

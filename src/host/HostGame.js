@@ -7,6 +7,8 @@ import HostWait from "./HostWait";
 import HostResult from "./HostResult";
 import HostFinish from "./HostFinish";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { calculateResults } from "../services/calcService";
+import '../assets/css/Host.css';
 
 class HostGame extends Component {
   constructor(props) {
@@ -66,10 +68,6 @@ class HostGame extends Component {
     }
   };
 
-  getPlayerByKey(key) {
-    return this.state.players.filter(player => player.id === key)[0];
-  }
-
   /**
    * 50 points for 1st
    * 30 points for 2nd
@@ -78,33 +76,10 @@ class HostGame extends Component {
   calculateResults() {
     console.log(this.state.players);
     let players = [...this.state.players];
-    let results = {};
-    players.forEach(player => {
-      let points = 0;
-      let top3answers = player.answers[this.state.round].slice(0, 3);
-      console.log(top3answers);
-      for (const [index, value] of top3answers.entries()) {
-        console.log(index, value);
-        let choicePoints = 50 - index * 20;
-        let choice = this.state.choices.filter(e => e.choice === value)[0];
-        let choicePlayerKeys = Object.values(choice.playerKeys);
-        for (const [index, playerKey] of choicePlayerKeys.entries()) {
-          let player = this.state.players.filter(p => p.id === playerKey)[0];
-          player.points += choicePoints - index * 5;
-          let playerName = this.getPlayerByKey(playerKey).name;
-          if (results[choice.choice]) {
-            results[choice.choice].points += player.points;
-            
-            if (results[choice.choice].players.indexOf(playerName) === -1) {
-              results[choice.choice].players.push(playerName);
-            }
-          } else {
-            results[choice.choice] = {};
-            results[choice.choice].points = player.points;
-            results[choice.choice].players = [playerName];
-          }
-        }
-      }
+    let choices = [...this.state.choices];
+    let result = calculateResults(players, choices, this.state.round);
+    
+    result.players.forEach(player => {
       fire
         .database()
         .ref(this.state.gameId)
@@ -113,9 +88,7 @@ class HostGame extends Component {
         .update({ points: player.points });
     });
 
-    let resultArray = Object.entries(results);
-    resultArray.sort((a, b) => a[1].points - b[1].points);
-    this.setState({players: players, results: resultArray});
+    this.setState({players: result.players, results: result.results});
   }
 
   componentWillMount() {
@@ -187,7 +160,7 @@ class HostGame extends Component {
   }
   render() {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div className="container" style={{ textAlign: "center" }}>
         <h1>Game {this.state.gameId}</h1>
         {this.state.state === "setup" && <HostSetup {...this.state} />}
         {this.state.state === "choice" && <HostChoice {...this.state} />}

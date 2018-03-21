@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import HostGame from "./host/HostGame";
 import PlayerGame from "./player/PlayerGame";
-import Home from "./Home";
+import Host from "./host/Host";
+import Player from "./player/Player";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 import AppBar from "material-ui/AppBar";
@@ -13,7 +14,7 @@ import CssBaseline from "material-ui/CssBaseline";
 
 const styles = theme => ({
   root: {
-    flexGrow: 2
+    flexGrow: 1
   }
 });
 
@@ -25,15 +26,8 @@ const App = props => {
       <CssBaseline />
       <Router>
         <div>
-          <AppBar position="static" color="primary">
-            <Toolbar>
-              <Link to="/" style={{textDecoration:'none', color:'white'}}>
-                <Button color="inherit">Home</Button>
-              </Link>
-            </Toolbar>
-          </AppBar>
-
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={Player} />
+          <Route exact path="/host" component={Host} />
           <Route path="/host/game/:id" component={HostGame} />
           <Route path="/player/game/:id/:name" component={PlayerGame} />
         </div>

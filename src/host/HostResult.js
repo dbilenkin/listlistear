@@ -53,7 +53,7 @@ const HostResult = props => {
                       <TableRow key={result[0]}>
                         <TableCell>{result[0]}</TableCell>
                         <TableCell numeric>{result[1].points}</TableCell>
-                        <TableCell numeric>{result[1].players}</TableCell>
+                        <TableCell>{result[1].players.join(", ")}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

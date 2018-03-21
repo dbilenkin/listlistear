@@ -1,0 +1,57 @@
+body {
+  font-family: 'CoveredByYourGrace'
+}
+
+.title {
+  text-align: center;
+  position: relative;
+  font-family: 'CoveredByYourGrace';
+  font-size: 200px;
+  color: transparent;
+  top: 15px;
+  text-shadow: 5px 5px 8px yellow;
+}
+
+.button {
+  text-align: center;
+  color: palegoldenrod;
+  position: relative;
+  top: 2px;
+  font-size: 99px;
+  color: transparent;
+  text-shadow: 5px 5px 5px lightskyblue;
+  cursor: pointer;
+}
+
+.button:hover {
+  text-shadow: 5px 5px 5px blue;
+}
+
+.container {
+  background-image: url(/static/media/bricks.522cbe86.jpg);
+  height: 100vh;
+  background-size: 844px;
+}
+
+
+@font-face {
+  font-family: CoveredByYourGrace;
+  src: url('../fonts/CoveredByYourGrace.ttf');
+}
+
+
+.name-enter {
+  animation-name: fade-in;
+  animation-duration: 300ms;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0.0;
+    height: 0px;
+  }
+  to {
+    opacity: 1.0;
+    height: 20px;
+  }
+}
