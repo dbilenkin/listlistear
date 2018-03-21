@@ -43,7 +43,7 @@ const Fade = ({ children, ...props }) => (
 const FadeInOut = props => (
   <CSSTransition
     {...props}
-    defaultStyle={{ 
+    defaultStyle={{
       //opacity: 0, 
       filter: "blur(20px)"
       //transform: "translate(0, 1000px)" 
@@ -60,7 +60,7 @@ const FadeInOut = props => (
       fontSize: transit(500, 1500, "ease-in-out")
       //transform: transit("translate(0, 0)", 500, "ease-in-out")
     }}
-    activeStyle={{ 
+    activeStyle={{
       //opacity: 1.0, 
       fontSize: 60,
       filter: "blur(1px)"
@@ -94,17 +94,22 @@ class HostSetup extends Component {
     const { classes } = this.props;
     return (
       <div>
-      <div className="rectangle"></div>
-      <div className="names">
-        <CSSTransitionGroup>
-          {this.props.players.map(player => (
-            <FadeInOut key={player.id}>
-              <div className="name" style={{color: player.color}}>{player.name}</div>
-              {/* <img src="../../static/media/handWithPhone.3da03c13.png" /> */}
-            </FadeInOut>
-          ))}
-        </CSSTransitionGroup>
-      </div>
+        <div className="names">
+          <CSSTransitionGroup>
+            {this.props.players.map((player, i) => (
+              <FadeInOut key={player.id}>
+                <div 
+                  className="name" 
+                  style={{ 
+                    left: (i % 2) * 225 + 'px', 
+                    top: (Math.floor((i/2)) % 4) * 60 + 'px', 
+                    color: player.color
+                  }}
+                >{player.name}</div>
+              </FadeInOut>
+            ))}
+          </CSSTransitionGroup>
+        </div>
       </div>
     );
   }

@@ -9,6 +9,50 @@ import Table, {
   TableHead,
   TableRow
 } from "material-ui/Table";
+import {
+  CSSTransitionGroup,
+  CSSTransition,
+  transit
+} from "react-css-transition";
+
+CSSTransition.childContextTypes = {
+  // this can be empty
+};
+
+const pos = [
+  {
+    top: "100px",
+    left: "50px"
+  },
+  {
+    top: "300px",
+    left: "50px"
+  },
+  {
+    top: "500px",
+    left: "50px"
+  },
+  {
+    top: "500px",
+    left: "400px"
+  },
+  {
+    top: "500px",
+    left: "750px"
+  },
+  {
+    top: "500px",
+    left: "1100px"
+  },
+  {
+    top: "300px",
+    left: "1100px"
+  },
+  {
+    top: "100px",
+    left: "1100px"
+  }
+]
 
 const styles = theme => ({
   root: {
@@ -29,59 +73,65 @@ const styles = theme => ({
   }
 });
 
+const SlideIn = props => (
+  <CSSTransition
+    {...props}
+    defaultStyle={{
+      transform: "translate(0, 1000px)"
+    }}
+    enterStyle={{
+      transform: transit(`translate(0,-400px)`, 1500, "ease-in-out")
+    }}
+    leaveStyle={{
+      transform: transit("translate(0, 1000px)", 500, "ease-in-out")
+    }}
+    activeStyle={{
+      transform: `translate(0,-400px)`
+    }}
+  />
+);
+
 const HostResult = props => {
   const { classes } = props;
 
   return (
     <div>
-      <h2>Round {props.round} Results</h2>
-      <div className={classes.root}>
-        <Grid container spacing={8}>
-        <Grid key="results" item xs>
-              <Paper className={classes.paper}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Overall Results</TableCell>
-                      <TableCell numeric>Points</TableCell>
-                      <TableCell>Player</TableCell>
-
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {props.results.map(result => (
-                      <TableRow key={result[0]}>
-                        <TableCell>{result[0]}</TableCell>
-                        <TableCell numeric>{result[1].points}</TableCell>
-                        <TableCell>{result[1].players.join(", ")}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </Grid>
-          {props.players.map(player => (
-            <Grid key={player.name} item xs={2}>
-              <Paper className={classes.paper}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{player.name}'s Choices -  {player.points} Points</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {player.answers[props.round].slice(0,3).map(answer => (
-                      <TableRow key={answer}>
-                        <TableCell>{answer}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </Grid>
+      <div className="round">Round {props.round} - Results</div>
+      <table className="result-table">
+        <tbody>
+          <tr key="resultkey" style={{ color: 'black' }}>
+            <td>Results</td>
+            <td>Points</td>
+            <td>Players</td>
+          </tr>
+          {props.results.slice(0, 5).map(result => (
+            <tr key={result[0]}>
+              <td>{result[0]}</td>
+              <td>{result[1].points}</td>
+              <td>{result[1].players.join(", ")}</td>
+            </tr>
           ))}
-        </Grid>
-      </div>
+        </tbody>
+      </table>
+
+      <CSSTransitionGroup>
+        {props.players.map((player, i) => (
+          <SlideIn key={i}>
+            <div key={player.name} className={`player-result player${i}-result`}>
+              <Paper className={classes.paper} style={{ color: player.color }}>
+                <div>{player.name}'s Choices</div>
+                <div>{player.points} Points</div>
+                <hr />
+                {player.answers[props.round].slice(0, 3).map(answer => (
+                  <div key={answer}>
+                    {answer}
+                  </div>
+                ))}
+              </Paper>
+            </div>
+          </SlideIn>
+        ))}
+      </CSSTransitionGroup>
     </div>
   );
 };

@@ -36,6 +36,7 @@ const calculateResults = (players, choices, round) => {
 
   let resultArray = Object.entries(results);
   resultArray.sort((a, b) => b[1].points - a[1].points);
+  players.sort((a, b) => b.points - a.points);
   return { players: players, results: resultArray };
 
 }

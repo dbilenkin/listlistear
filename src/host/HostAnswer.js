@@ -9,11 +9,12 @@ class HostAnswer extends Component {
   render() {
     return (
       <div>
-        <h2>Round {this.props.round}</h2>
-        <h3>Everyone choose the top {this.props.numAnswers} based on the choices given!</h3>
+        <p className="round">Round {this.props.round}</p>
+        <div className="normal-text">Everyone choose the top {this.props.numAnswers}</div>
+        <div className="normal-text">based on the choices given!</div>
       </div>
-    );
-  }
-}
-
-export default HostAnswer;
+        );
+      }
+    }
+    
+    export default HostAnswer;

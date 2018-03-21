@@ -13,20 +13,20 @@ import '../assets/css/Host.css';
 class HostGame extends Component {
   constructor(props) {
     const questions = [
-      "What are your favorite vacation destinations?",
-      "What is your favorite Disney Movie?",
-      "Who is the best villain?"
+      "Best ice cream flavor",
+      "Best Disney Movie",
+      "Best TV Show"
     ];
 
     const colors = [
-      'darkyellow',
+      'darkgoldenrod',
       'green',
       'red',
       'darkblue',
       'blueviolet',
-      'beige',
+      'brown',
       'coral',
-      'aquamarine'
+      'teal'
     ]
 
     console.log(props);
@@ -91,7 +91,7 @@ class HostGame extends Component {
     let players = [...this.state.players];
     let choices = [...this.state.choices];
     let result = calculateResults(players, choices, this.state.round);
-    
+
     result.players.forEach(player => {
       fire
         .database()
@@ -101,7 +101,7 @@ class HostGame extends Component {
         .update({ points: player.points });
     });
 
-    this.setState({players: result.players, results: result.results});
+    this.setState({ players: result.players, results: result.results });
   }
 
   componentWillMount() {
@@ -114,14 +114,14 @@ class HostGame extends Component {
     gameRef.on("value", snapshot => {
       let round = snapshot.child("round").val();
       if (round !== this.state.round) {
-        this.setState({ round: round});
-      }    
+        this.setState({ round: round });
+      }
 
       let newplayers = [];
       let playersSnapshot = snapshot.child("players");
       let playerCount = 0;
       let that = this;
-      playersSnapshot.forEach(function(player) {
+      playersSnapshot.forEach(function (player) {
         newplayers.push({
           name: player.val().name,
           points: player.val().points,
@@ -136,7 +136,7 @@ class HostGame extends Component {
 
       let newchoices = [];
       let choicesSnapshot = snapshot.child("choices").child(this.state.round);
-      choicesSnapshot.forEach(function(choice) {
+      choicesSnapshot.forEach(function (choice) {
         newchoices.push({
           choice: choice.key,
           playerKeys: choice.val()
@@ -168,16 +168,23 @@ class HostGame extends Component {
       let state = snapshot.val();
 
       if (state === "result") {
-        this.calculateResults();
+        setTimeout(() => this.calculateResults(), 100);
       }
       if (state && state !== this.state.state) {
         this.setState({ state: state });
+      }
+      if (state === "finish") {
+        setTimeout(() => {
+          let sortedPlayers = this.state.players.sort((a, b) => b.points - a.points);
+          this.setState({ players: sortedPlayers });
+        }, 100);
       }
     });
   }
   render() {
     return (
       <div className="container" style={{ textAlign: "center" }}>
+        <div className={`rectangle ${this.state.state}`}></div>
         <a href="/host" className="back-button">Back</a>
         <div className="title game-title">Game {this.state.gameId}</div>
         {this.state.state === "setup" && <HostSetup {...this.state} />}

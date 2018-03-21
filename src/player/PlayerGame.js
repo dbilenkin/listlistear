@@ -98,7 +98,7 @@ class PlayerGame extends Component {
             allChoices.push(choice.key);
           });
         }
-        if (state === "choice" || state === "answer") {
+        if (state === "wait.answer" || state === "choice" || state === "answer") {
           this.setState({ choices: allChoices, answers: allChoices });
         }
 

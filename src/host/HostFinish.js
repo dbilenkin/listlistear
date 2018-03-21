@@ -34,33 +34,23 @@ const HostFinish = props => {
 
   return (
     <div>
-      <h2>Game Over!</h2>
-      <div className={classes.root}>
-        <Grid container spacing={24}>
-          {props.players.map(player => (
-            <Grid key={player.name} item xs>
-              <Paper className={classes.paper}>
-                <Table className={classes.table}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{player.name}'s Choices</TableCell>
-                      <TableCell numeric>{player.points} Points</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {player.answers[props.round].map(answer => (
-                      <TableRow key={answer}>
-                        <TableCell>{answer}</TableCell>
-                        <TableCell numeric>{player.points}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </Grid>
+      <p className="round">Game Over!</p>
+      <table className="result-table">
+        <tbody>
+          <tr key="resultkey" style={{ color: 'black' }}>
+            <td>Rank</td>
+            <td>Player</td>
+            <td>Points</td>
+          </tr>
+          {props.players.map((player, i) => (
+            <tr key={i}>
+              <td>{i+1}</td>
+              <td>{player.name}</td>
+              <td>{player.points}</td>
+            </tr>
           ))}
-        </Grid>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
 };

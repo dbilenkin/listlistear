@@ -8,8 +8,8 @@ class HostChoice extends Component {
   render() {
     return (
       <div>
-        <h2>Round {this.props.round}</h2>
-        <h3>{this.props.questions[this.props.round]}</h3>
+        <p className="round">Round {this.props.round}</p>
+        <div className="normal-text">{this.props.questions[this.props.round]}</div>
       </div>
     );
   }
