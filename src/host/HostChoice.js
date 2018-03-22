@@ -9,7 +9,7 @@ class HostChoice extends Component {
     return (
       <div>
         <p className="round">Round {this.props.round}</p>
-        <div className="normal-text">{this.props.questions[this.props.round]}</div>
+        <div className="normal-text">{this.props.questions[this.props.round].question}</div>
       </div>
     );
   }

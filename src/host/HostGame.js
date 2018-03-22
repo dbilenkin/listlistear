@@ -8,7 +8,7 @@ import HostResult from "./HostResult";
 import HostFinish from "./HostFinish";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { calculateResults } from "../services/calcService";
-import '../assets/css/Host.css';
+import "../assets/css/Host.css";
 
 class HostGame extends Component {
   constructor(props) {
@@ -19,15 +19,15 @@ class HostGame extends Component {
     ];
 
     const colors = [
-      'darkgoldenrod',
-      'green',
-      'red',
-      'darkblue',
-      'blueviolet',
-      'brown',
-      'coral',
-      'teal'
-    ]
+      "darkgoldenrod",
+      "green",
+      "red",
+      "darkblue",
+      "blueviolet",
+      "brown",
+      "coral",
+      "teal"
+    ];
 
     console.log(props);
     super(props);
@@ -60,6 +60,26 @@ class HostGame extends Component {
         }
       });
   }
+
+  checkQuestions = () => {
+    let numPlayersQuestioned = 0;
+    this.state.players.forEach(player => {
+      if (player.questions) {
+        player.questioned = true;
+        numPlayersQuestioned++;
+      }
+    });
+
+    if (
+      this.state.players.length > 0 &&
+      numPlayersQuestioned === this.state.players.length
+    ) {
+      fire
+        .database()
+        .ref(this.state.gameId)
+        .update({ state: "choice" });
+    }
+  };
 
   checkAnswers = () => {
     let numPlayersAnswered = 0;
@@ -110,6 +130,7 @@ class HostGame extends Component {
     let that = this;
 
     let stateRef = gameRef.child("state");
+    let answerTimer;
 
     gameRef.on("value", snapshot => {
       let round = snapshot.child("round").val();
@@ -121,10 +142,11 @@ class HostGame extends Component {
       let playersSnapshot = snapshot.child("players");
       let playerCount = 0;
       let that = this;
-      playersSnapshot.forEach(function (player) {
+      playersSnapshot.forEach(function(player) {
         newplayers.push({
           name: player.val().name,
           points: player.val().points,
+          questions: player.val().questions,
           answers: player.val().answers,
           choices: player.val().choices,
           color: that.state.colors[playerCount],
@@ -136,7 +158,7 @@ class HostGame extends Component {
 
       let newchoices = [];
       let choicesSnapshot = snapshot.child("choices").child(this.state.round);
-      choicesSnapshot.forEach(function (choice) {
+      choicesSnapshot.forEach(function(choice) {
         newchoices.push({
           choice: choice.key,
           playerKeys: choice.val()
@@ -144,14 +166,17 @@ class HostGame extends Component {
       });
       this.setState({ choices: newchoices });
 
-      if (this.state.state === "choice" || this.state.state === "wait.choice") {
-        let that = this;
-        let answerTimer = setTimeout(() => {
-          if (that.state.state === "choice") {
-            gameRef.update({ state: "answer" });
-          }
-        }, this.state.choiceTime * 1000);
+      let newquestions = [];
+      let questionsSnapshot = snapshot.child("questions");
+      questionsSnapshot.forEach(function(question) {
+        newquestions.push({
+          question: question.key,
+          playerKeys: question.val()
+        });
+      });
+      this.setState({ questions: newquestions });
 
+      if (this.state.state === "choice" || this.state.state === "wait.choice") {
         if (newchoices.length >= 10) {
           window.clearTimeout(answerTimer);
           gameRef.update({ state: "answer" });
@@ -161,11 +186,25 @@ class HostGame extends Component {
         this.state.state === "wait.answer"
       ) {
         this.checkAnswers();
+      } else if (
+        this.state.state === "question" ||
+        this.state.state === "wait.question"
+      ) {
+        this.checkQuestions();
       }
     });
 
     stateRef.on("value", snapshot => {
       let state = snapshot.val();
+
+      if (state === "choice") {
+        let that = this;
+        answerTimer = setTimeout(() => {
+          if (that.state.state === "choice") {
+            gameRef.update({ state: "answer" });
+          }
+        }, this.state.choiceTime * 1000);
+      }
 
       if (state === "result") {
         setTimeout(() => this.calculateResults(), 100);
@@ -175,7 +214,9 @@ class HostGame extends Component {
       }
       if (state === "finish") {
         setTimeout(() => {
-          let sortedPlayers = this.state.players.sort((a, b) => b.points - a.points);
+          let sortedPlayers = this.state.players.sort(
+            (a, b) => b.points - a.points
+          );
           this.setState({ players: sortedPlayers });
         }, 100);
       }
@@ -184,9 +225,12 @@ class HostGame extends Component {
   render() {
     return (
       <div className="container" style={{ textAlign: "center" }}>
-        <div className={`rectangle ${this.state.state}`}></div>
-        <a href="/host" className="back-button">Back</a>
+        
+        <a href="/host" className="back-button">
+          Back
+        </a>
         <div className="title game-title">Game {this.state.gameId}</div>
+        <div className={`rectangle ${this.state.state}`} >
         {this.state.state === "setup" && <HostSetup {...this.state} />}
         {this.state.state === "choice" && <HostChoice {...this.state} />}
         {this.state.state === "answer" && <HostAnswer {...this.state} />}
@@ -195,6 +239,7 @@ class HostGame extends Component {
         )}
         {this.state.state === "result" && <HostResult {...this.state} />}
         {this.state.state === "finish" && <HostFinish {...this.state} />}
+        </div>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import fire from "../fire";
 import FuzzySet from "fuzzyset.js";
 import PlayerSetup from "./PlayerSetup";
+import PlayerQuestion from "./PlayerQuestion";
 import PlayerChoice from "./PlayerChoice";
 import PlayerAnswer from "./PlayerAnswer";
 import PlayerWait from "./PlayerWait";
@@ -84,7 +85,10 @@ class PlayerGame extends Component {
         }
 
         let answers = null;
+        let questions = null;
         let allChoices = [];
+        let allQuestions = [];
+
         if (this.state.key) {
           answers = snapshot
             .child("players")
@@ -92,28 +96,73 @@ class PlayerGame extends Component {
             .child("answers")
             .val();
 
+          questions = snapshot
+            .child("players")
+            .child(this.state.key)
+            .child("questions")
+            .val();
+
           let choices = snapshot.child("choices").child(this.state.round);
 
           choices.forEach(choice => {
             allChoices.push(choice.key);
           });
+
+          let questionsSnapshot = snapshot.child("questions");
+
+          questionsSnapshot.forEach(question => {
+            allQuestions.push(question.key);
+          });
+
+          this.setState({questions: allQuestions});
         }
-        if (state === "wait.answer" || state === "choice" || state === "answer") {
+
+        if (
+          state === "wait.answer" ||
+          state === "choice" ||
+          state === "answer"
+        ) {
           this.setState({ choices: allChoices, answers: allChoices });
         }
 
         if (state.split(".")[0] !== "wait") {
           this.setState({ state: state });
-        } else if (state == "wait.answer") {
-          if (answers && answers[this.state.round]) {
-            this.setState({ state: state });
-          } else {
-            this.setState({ state: "answer" });
+        } else {
+          if (state == "wait.answer") {
+            if (answers && answers[this.state.round]) {
+              this.setState({ state: state });
+            } else {
+              this.setState({ state: "answer" });
+            }
+          } else if (state == "wait.question") {
+            if (questions) {
+              this.setState({ state: state });
+            } else {
+              this.setState({ state: "question" });
+            }
           }
         }
       }
     });
   }
+
+  changeQuestion = event => {
+    this.setState({ question: event.target.value });
+  };
+
+  submitQuestion = e => {
+    let question = this.state.question;
+    let questionsRef = this.gameRef.child("questions");
+
+    questionsRef.child(question).push(this.state.key);
+    this.gameRef
+      .child("players")
+      .child(this.state.key)
+      .child("questions")
+      .push(question);
+
+    this.gameRef.update({ state: "wait.question" });
+  };
 
   changeChoice = event => {
     this.setState({ choice: event.target.value });
@@ -211,7 +260,7 @@ class PlayerGame extends Component {
   }
 
   readyToStart = () => {
-    this.gameRef.update({ state: "choice" });
+    this.gameRef.update({ state: "question" });
   };
 
   nextRound = () => {
@@ -222,7 +271,7 @@ class PlayerGame extends Component {
 
   finishGame = () => {
     this.gameRef.update({ state: "finish" });
-  }
+  };
 
   handleDelete(key) {
     console.log(key);
@@ -240,6 +289,13 @@ class PlayerGame extends Component {
             addHandler={this.addPlayer}
             changeHandler={this.changeName}
             readyToStart={this.readyToStart}
+          />
+        )}
+        {this.state.state === "question" && (
+          <PlayerQuestion
+            {...this.state}
+            changeQuestion={this.changeQuestion.bind(this)}
+            submitQuestion={this.submitQuestion.bind(this)}
           />
         )}
         {this.state.state === "choice" && (
@@ -261,9 +317,11 @@ class PlayerGame extends Component {
           <PlayerWait {...this.state} />
         )}
         {this.state.state === "result" && (
-          <PlayerResult {...this.state} 
-          nextRound={this.nextRound.bind(this)} 
-          finishGame={this.finishGame.bind(this)}/>
+          <PlayerResult
+            {...this.state}
+            nextRound={this.nextRound.bind(this)}
+            finishGame={this.finishGame.bind(this)}
+          />
         )}
       </div>
     );

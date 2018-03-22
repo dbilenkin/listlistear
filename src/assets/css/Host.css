@@ -42,18 +42,18 @@
 
 .round {
   font-size: 40px;
-  filter: blur(1px);
   z-index: 100;
   color: darkblue;
   position: relative;
   top: 40px;
+  font-family: armalite;
 }
 
 .normal-text {
   font-size: 30px;
-  filter: blur(1px);
   z-index: 100;
   color: darkblue;
+  font-family: armalite;
 }
 
 .button {
@@ -89,10 +89,10 @@
   width: 100%;
   height: 100%;
   opacity: 1;
-  z-index: -1;
+  z-index: -2;
 }
 
-.rectangle {
+/* .rectangle {
   height: 300px;
   width: 600px;
   background-color: lightblue;
@@ -103,6 +103,48 @@
   left: 50%;
   margin-left: -300px;
   border: 10px solid darkblue;
+} */
+
+.rectangle {
+  position: relative;
+	width: 600px;
+	padding: 50px;
+	margin: 0 auto;
+	background-color: #fff;
+	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.rectangle:before, .rectangle:after
+{
+	position: absolute;
+	width: 40%;
+	height: 40px;
+	content: ' ';
+	left: 12px;
+	bottom: 12px;
+	background: transparent;
+	-webkit-transform: skew(-5deg) rotate(-5deg);
+	-moz-transform: skew(-5deg) rotate(-5deg);
+	-ms-transform: skew(-5deg) rotate(-5deg);
+	-o-transform: skew(-5deg) rotate(-5deg);
+	transform: skew(-5deg) rotate(-5deg);
+	-webkit-box-shadow: 0 22px 12px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0 22px 12px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 12px 12px rgba(0, 0, 0, 0.3);
+	z-index: 1;
+} 
+
+.rectangle:after
+{
+	left: auto;
+	right: 12px;
+	-webkit-transform: skew(5deg) rotate(5deg);
+	-moz-transform: skew(5deg) rotate(5deg);
+	-ms-transform: skew(5deg) rotate(5deg);
+	-o-transform: skew(5deg) rotate(5deg);
+	transform: skew(5deg) rotate(5deg);
 }
 
 .rectangle.finish{
@@ -117,14 +159,14 @@
   text-align: left;
   font-size: 20px;
   color: darkgreen;
-  font-family: Stencil;
+  font-family: armalite;
 }
 
 .player-result {
   width: 300px;
   position: absolute;
   box-shadow: 5px 5px 25px;
-  font-family: Stencil;
+  font-family: armalite;
 }
 
 .player0-result {
@@ -168,6 +210,11 @@
 @font-face {
   font-family: Stencil;
   src: url("../fonts/StardosStencil-Regular.ttf")
+}
+
+@font-face {
+  font-family: armalite;
+  src: url("../fonts/armalite.ttf")
 }
 
 .name-enter {

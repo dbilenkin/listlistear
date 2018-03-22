@@ -26,13 +26,20 @@ const HostWait = props => {
 
   const { classes } = props;
 
-  let waitType = props.state.split('.')[1] === 'choice' ? 'choices' : 'answers';
+  let waitType = props.state.split('.')[1] === 'question' ? 'questions' : 'answers';
 
   return (
     <div>
-      <p className="round">Round {props.round} - Results</p>
-      <div className="normal-text">Waiting for everyone to finish ...</div>
-      {props.players.filter(player => player.answers && player.answers[props.round]).map((player, i) => (
+      {waitType === 'questions' && (<p className="round">Categories</p>)}
+      {waitType === 'answers' && (<p className="round">Round {props.round} - Results</p>)}
+      <div className="normal-text">Waiting for everyone to finish...</div>
+      {
+        props.players.filter(player => {
+          if (waitType === 'questions') {
+            return (player.questions != undefined);
+          } 
+          return player[waitType] && player[waitType][props.round]
+        }).map((player, i) => (
         <div key={player.name} className={`player-result player${i}-result`}>
           <Paper className={classes.paper} style={{ color: player.color }}>
             <div>{player.name}</div>
