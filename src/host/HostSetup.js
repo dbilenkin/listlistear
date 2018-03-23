@@ -16,7 +16,8 @@ import {
   CSSTransition,
   transit
 } from "react-css-transition";
-import Transition from 'react-motion-ui-pack'
+import Transition from "react-motion-ui-pack";
+import Anime from "react-anime";
 
 CSSTransition.childContextTypes = {
   // this can be empty
@@ -45,7 +46,7 @@ const FadeInOut = props => (
   <CSSTransition
     {...props}
     defaultStyle={{
-      //opacity: 0, 
+      //opacity: 0,
       //fontSize: 200,
       transform: "scale(10, 10)",
       transform: "transform(100px, -100px)"
@@ -65,7 +66,7 @@ const FadeInOut = props => (
       transform: transit("transform(100px, -100px)", 1500, "ease-in-out")
     }}
     activeStyle={{
-      //opacity: 1.0, 
+      //opacity: 1.0,
       //fontSize: 60,
       transform: "scale(1, 1)",
       transform: "transform(0,0)"
@@ -97,36 +98,61 @@ class HostSetup extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={"rectangle"} >
+      <div className={"rectangle"}>
         <div className="names">
+          {/* <Anime
+            easing="easeOutElastic"
+            duration={1000}
+            direction="alternate"
+            loop={true}
+            delay={(el, index) => index * 240}
+            translateX="13rem"
+            scale={[0.75, 0.9]}
+          >
+            {this.props.players.map((player, i) => (
+              <div
+                key={player.id}
+                className="name"
+                style={{
+                  left: (i % 2) * 300 + "px",
+                  top: (Math.floor(i / 2) % 4) * 60 + "px",
+                  color: player.color
+                }}
+              >
+                {player.name}
+              </div>
+            ))}
+          </Anime> */}
+
           <Transition
-            component={false} // don't use a wrapping component
+            component="div" // don't use a wrapping component
             enter={{
               opacity: 1,
-              translateY: spring(0, {stiffness: 200, damping: 20}),
-              translateX: spring(0, {stiffness: 200, damping: 20}),
-              scale: spring(1, {stiffness: 200, damping: 20}),
+              translateY: spring(0, { stiffness: 200, damping: 20 }),
+              translateX: spring(0, { stiffness: 200, damping: 20 }),
+              scale: spring(1, { stiffness: 200, damping: 20 })
             }}
             leave={{
               opacity: 0,
               translateY: -1000,
               translateX: -1000,
-              scale: (10,10)
+              scale: (10, 10)
             }}
           >
             {this.props.players.map((player, i) => (
-                <div key={player.id}
-                  className="name"
-                  style={{
-                    left: (i % 2) * 300 + 'px',
-                    top: (Math.floor((i / 2)) % 4) * 60 + 'px',
-                    color: player.color
-                  }}
-                >{player.name}</div>
+              <div
+                key={player.id}
+                className="name"
+                style={{
+                  left: (i % 2) * 300 + "px",
+                  top: (Math.floor(i / 2) % 4) * 60 + "px",
+                  color: player.color
+                }}
+              >
+                {player.name}
+              </div>
             ))}
           </Transition>
-
-
 
           {/* <CSSTransitionGroup>
             {this.props.players.map((player, i) => (

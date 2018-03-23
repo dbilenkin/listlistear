@@ -9,6 +9,7 @@
     "material-ui": "^1.0.0-beta.37",
     "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.2",
+    "react-anime": "^2.1.0",
     "react-css-transition": "^0.7.4",
     "react-dom": "^16.2.0",
     "react-motion": "^0.5.2",

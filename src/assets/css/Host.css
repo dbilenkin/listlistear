@@ -3,7 +3,7 @@
 .title {
   text-align: center;
   position: relative;
-  font-family: "CoveredByYourGrace";
+  font-family: "punk-kid";
   font-size: 200px;
   color: transparent;
   top: 15px;
@@ -33,7 +33,7 @@
 
 .name {
   position: absolute;
-  font-family: "metal-lord";
+  font-family: "armalite";
   font-size: 50px;
   /* filter: blur(2px); */
   z-index: 100;
@@ -107,7 +107,8 @@
   width: 600px;
   height: 400px;
 	padding: 20px;
-	margin: 0 auto;
+  margin: 0 auto;
+  margin-top: 30px;
   background-color: #333;
   border: 10px solid antiquewhite;
 	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
