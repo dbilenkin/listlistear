@@ -17,7 +17,9 @@ import {
   transit
 } from "react-css-transition";
 import Transition from "react-motion-ui-pack";
-import Anime from "react-anime";
+//import Anime from "react-anime";
+import { Howl, Howler } from 'howler';
+import ReactHowler from 'react-howler'
 
 CSSTransition.childContextTypes = {
   // this can be empty
@@ -95,10 +97,34 @@ class HostSetup extends Component {
     super(props);
   }
 
+  componentDidMount() {
+
+    // const sound = new Howl({
+    //   src: ['KnowingTwilight.mp3']
+    // });
+
+    // sound.once('load', function () {
+    //   sound.play();
+    // });
+
+    var audio = new Audio('/KnowingTwilight.mp3');
+    audio.play();
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <div className={"rectangle"}>
+        {/* <audio
+          id="audio"
+          src="KnowingTwilight.mp3"
+          autoPlay>
+          Your browser does not support the <code>audio</code> element.
+        </audio> */}
+        {/* <ReactHowler
+          src='KnowingTwilight.mp3'
+          playing={true}
+        /> */}
         <div className="names">
           {/* <Anime
             easing="easeOutElastic"
