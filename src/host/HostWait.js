@@ -30,25 +30,35 @@ const HostWait = props => {
 
   return (
     <div>
-      {waitType === 'questions' && (<p className="round">Categories</p>)}
-      {waitType === 'answers' && (<p className="round">Round {props.round} - Results</p>)}
-      <div className="normal-text">Waiting for everyone to finish...</div>
+      <div className={`rectangle ${waitType}`}>
+        {waitType === 'questions' && (<p className="round">Categories</p>)}
+        {waitType === 'answers' && (<p className="round">Round {props.round + 1} - Results</p>)}
+        {props.state === "wait.question" && props.questionsIn && (
+          <div>
+            <div className="normal-text">All questions are in.</div>
+            <div className="normal-text">{props.firstPlayer.name}, start the first round!</div>
+          </div>
+        )}
+        {!props.questionsIn && (
+          <div className="normal-text">Waiting for everyone to finish...</div>
+        )}
+      </div>
       {
         props.players.filter(player => {
           if (waitType === 'questions') {
             return (player.questions != undefined);
-          } 
+          }
           return player[waitType] && player[waitType][props.round]
         }).map((player, i) => (
-        <div key={player.name} className={`player-result player${i}-result`}>
-          <Paper className={classes.paper} style={{ color: player.color }}>
-            <div>{player.name}</div>
-            <div>{player.points} Points</div>
-            <hr />
+          <div key={player.name} className={`player-result player${i}-result`}>
+            <div style={{ color: player.color }}>
+              <div>{player.name}</div>
+              <div>{player.points} Points</div>
+              <hr />
 
-          </Paper>
-        </div>
-      ))}
+            </div>
+          </div>
+        ))}
     </div>
   );
 

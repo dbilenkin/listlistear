@@ -6,6 +6,11 @@ import { withStyles } from "material-ui/styles";
 import Paper from "material-ui/Paper";
 import Grid from "material-ui/Grid";
 import Button from "material-ui/Button";
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 
 const JoinButton = props => (
   <Button
@@ -28,13 +33,13 @@ const JoinGame = parentProps => (
       value={parentProps.gameId}
       onChange={parentProps.onGameChange}
     />
-    <br/>
+    <br />
     <TextField
       label="Name"
       value={parentProps.name}
       onChange={parentProps.onNameChange}
     />
-    <br/>
+    <br />
     <Route
       path="/"
       render={props => (
@@ -84,6 +89,21 @@ class Player extends Component {
     const { spacing } = this.state;
     return (
       <div className={classes.root}>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <IconButton
+              style={{color: 'white'}}
+              className={classes.button}
+              onClick={() => {window.location = "/"}}>
+              <Icon>home</Icon>
+            </IconButton>
+            { this.state.gameId && (
+              <Typography variant="title" color="inherit">
+              Game {this.state.gameId}
+            </Typography>
+            )}
+          </Toolbar>
+        </AppBar>
         <Grid
           container
           spacing={16}
@@ -94,7 +114,7 @@ class Player extends Component {
           <Grid item xs={12}>
             <Grid container justify="center" alignItems="center" direction="column">
 
-              <Grid item style={{textAlign: 'center'}}>
+              <Grid item style={{ textAlign: 'center' }}>
                 <JoinGame
                   {...this.state}
                   onGameChange={this.pickGame}

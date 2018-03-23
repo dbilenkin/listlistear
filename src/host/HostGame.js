@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import fire from "../fire";
 import HostSetup from "./HostSetup";
+import HostQuestion from "./HostQuestion";
 import HostChoice from "./HostChoice";
 import HostAnswer from "./HostAnswer";
 import HostWait from "./HostWait";
@@ -19,14 +20,14 @@ class HostGame extends Component {
     ];
 
     const colors = [
-      "darkgoldenrod",
-      "green",
-      "red",
-      "darkblue",
-      "blueviolet",
-      "brown",
-      "coral",
-      "teal"
+      "lightsalmon",
+      "lightskyblue",
+      "violet",
+      "lawngreen",
+      "yellow",
+      "pink",
+      "cadetblue",
+      "lightslategray"
     ];
 
     console.log(props);
@@ -34,6 +35,7 @@ class HostGame extends Component {
     this.state = {
       colors: colors.sort(() => Math.random() - 0.5),
       questions: questions,
+      questionsIn: false,
       players: [],
       choices: [],
       results: [],
@@ -43,7 +45,8 @@ class HostGame extends Component {
       numChoices: 10,
       choiceTime: 30,
       maxPlayers: 8,
-      gameId: props.match.params.id
+      gameId: props.match.params.id,
+      firstPlayer: ''
     };
 
     fire
@@ -77,7 +80,9 @@ class HostGame extends Component {
       fire
         .database()
         .ref(this.state.gameId)
-        .update({ state: "choice" });
+        .update({ questionsIn: "true" });
+
+      this.setState({questionsIn: true});
     }
   };
 
@@ -152,6 +157,9 @@ class HostGame extends Component {
           color: that.state.colors[playerCount],
           id: player.key
         });
+        if (playerCount === 0) {
+          that.setState({firstPlayer: newplayers[0]})
+        }
         playerCount++;
       });
       this.setState({ players: newplayers });
@@ -224,14 +232,13 @@ class HostGame extends Component {
   }
   render() {
     return (
-      <div className="container" style={{ textAlign: "center" }}>
-        
+      <div className="container">     
         <a href="/host" className="back-button">
           Back
         </a>
         <div className="title game-title">Game {this.state.gameId}</div>
-        <div className={`rectangle ${this.state.state}`} >
         {this.state.state === "setup" && <HostSetup {...this.state} />}
+        {this.state.state === "question" && <HostQuestion {...this.state} />}
         {this.state.state === "choice" && <HostChoice {...this.state} />}
         {this.state.state === "answer" && <HostAnswer {...this.state} />}
         {this.state.state.split(".")[0] === "wait" && (
@@ -239,7 +246,6 @@ class HostGame extends Component {
         )}
         {this.state.state === "result" && <HostResult {...this.state} />}
         {this.state.state === "finish" && <HostFinish {...this.state} />}
-        </div>
       </div>
     );
   }

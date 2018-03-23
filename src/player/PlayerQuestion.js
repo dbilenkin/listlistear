@@ -12,12 +12,11 @@ class PlayerQuestion extends Component {
   render() {
     return (
       <div>
-
-        <h2>Round: {this.props.round}</h2>
         <h2>Alright, {this.props.name}</h2>
         <h3>Come up with a topic or question!</h3>
 
         <TextField
+          style={{width: '300px'}}
           label="Topic or Question"
           value={this.props.question}
           onChange={this.props.changeQuestion}

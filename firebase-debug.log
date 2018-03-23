@@ -1,0 +1,27 @@
+[debug] [2018-03-21T19:09:22.358Z] ----------------------------------------------------------------------
+[debug] [2018-03-21T19:09:22.360Z] Command:       /Users/rrv162/.nvm/versions/node/v8.9.2/bin/node /Users/rrv162/.nvm/versions/node/v8.9.2/bin/firebase deploy
+[debug] [2018-03-21T19:09:22.360Z] CLI Version:   3.17.6
+[debug] [2018-03-21T19:09:22.360Z] Platform:      darwin
+[debug] [2018-03-21T19:09:22.360Z] Node Version:  v8.9.2
+[debug] [2018-03-21T19:09:22.361Z] Time:          Wed Mar 21 2018 15:09:22 GMT-0400 (EDT)
+[debug] [2018-03-21T19:09:22.361Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-21T19:09:22.377Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-21T19:09:22.378Z] > authorizing via signed-in user
+[debug] [2018-03-21T19:09:22.379Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-03-21T19:09:22.379Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/l5VkIGNbmLLaxPLKJ_BnmFMiP01fxYxhGTX6bcFK998',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Mar 21 2018 15:09:22 GMT-0400 (EDT)
+[debug] [2018-03-21T19:09:23.286Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T19:09:23.302Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/listlistear  
+  
+ Wed Mar 21 2018 15:09:23 GMT-0400 (EDT)
+[debug] [2018-03-21T19:09:23.953Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-21T19:09:23.954Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/listlistear/tokens  
+  
+ Wed Mar 21 2018 15:09:23 GMT-0400 (EDT)
+[debug] [2018-03-21T19:09:24.739Z] <<< HTTP RESPONSE 200

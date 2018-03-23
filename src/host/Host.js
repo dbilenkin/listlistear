@@ -25,19 +25,21 @@ class Host extends Component {
     return (
       <div className="container">
         <div className="title">List List Ear</div>
-        <Route
-          path="/host"
-          render={props => (
-            <a
-              className="button"
-              onClick={() =>
-                props.history.push("host/game/" + this.state.gameId)
-              }
-            >
-              Start Game
+        <div className="rectangle start">
+          <Route
+            path="/host"
+            render={props => (
+              <a
+                className="button"
+                onClick={() =>
+                  props.history.push("host/game/" + this.state.gameId)
+                }
+              >
+                Start Game
             </a>
-          )}
-        />
+            )}
+          />
+        </div>
       </div>
     );
   }

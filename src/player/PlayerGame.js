@@ -14,6 +14,11 @@ import Reorder, {
   reorderFromTo,
   reorderFromToImmutable
 } from "react-reorder";
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 
 class PlayerGame extends Component {
   constructor(props) {
@@ -27,6 +32,7 @@ class PlayerGame extends Component {
     this.gameRef = fire.database().ref(props.match.params.id);
     this.state = {
       questions: questions,
+      questionsIn: false,
       state: "",
       name: props.match.params.name,
       key: "",
@@ -69,7 +75,7 @@ class PlayerGame extends Component {
         let that = this;
         let playerExists = false;
         let i = 0;
-        playersSnapshot.forEach(function(player) {
+        playersSnapshot.forEach(function (player) {
           if (that.state.name === player.val().name) {
             playerExists = true;
             that.setState({ key: player.key });
@@ -82,6 +88,13 @@ class PlayerGame extends Component {
 
         if (state === "setup" && !playerExists) {
           this.addPlayer();
+        }
+
+        if (state === "question" || state === "wait.question") {
+          let questionsIn = snapshot
+            .child("questionsIn").val();
+
+          this.setState({ questionsIn: Boolean(questionsIn) });
         }
 
         let answers = null;
@@ -114,7 +127,7 @@ class PlayerGame extends Component {
             allQuestions.push(question.key);
           });
 
-          this.setState({questions: allQuestions});
+          this.setState({ questions: allQuestions });
         }
 
         if (
@@ -249,7 +262,7 @@ class PlayerGame extends Component {
     this.gameRef
       .orderByKey()
       .limitToFirst(1)
-      .once("value", function(snap) {
+      .once("value", function (snap) {
         console.log(snap.val());
         if (
           Object.values(Object.values(snap.val())[0])[0].name === player.name
@@ -262,6 +275,10 @@ class PlayerGame extends Component {
   readyToStart = () => {
     this.gameRef.update({ state: "question" });
   };
+
+  startRound = () => {
+    this.gameRef.update({ state: "choice" });
+  }
 
   nextRound = () => {
     let nextRound = this.state.round + 1;
@@ -282,7 +299,18 @@ class PlayerGame extends Component {
     let baseUrl = "/player/game/" + this.state.gameId + "/" + this.state.name;
     return (
       <div style={{ textAlign: "center" }}>
-        <h1>{this.state.gameId}</h1>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <IconButton
+              style={{ color: 'white' }}
+              onClick={() => { window.location = "/" }}>
+              <Icon>home</Icon>
+            </IconButton>
+            <Typography variant="title" color="inherit">
+              Game {this.state.gameId}
+            </Typography>
+          </Toolbar>
+        </AppBar>
         {this.state.state === "setup" && (
           <PlayerSetup
             {...this.state}
@@ -314,7 +342,8 @@ class PlayerGame extends Component {
           />
         )}
         {this.state.state.split(".")[0] === "wait" && (
-          <PlayerWait {...this.state} />
+          <PlayerWait {...this.state}
+            startRound={this.startRound.bind(this)} />
         )}
         {this.state.state === "result" && (
           <PlayerResult

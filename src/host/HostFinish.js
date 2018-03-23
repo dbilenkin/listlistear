@@ -33,7 +33,7 @@ const HostFinish = props => {
   const { classes } = props;
 
   return (
-    <div>
+    <div className={`rectangle ${this.state.state}`}>
       <p className="round">Game Over!</p>
       <table className="result-table">
         <tbody>

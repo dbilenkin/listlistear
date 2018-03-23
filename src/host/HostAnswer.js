@@ -8,10 +8,10 @@ class HostAnswer extends Component {
 
   render() {
     return (
-      <div>
-        <p className="round">Round {this.props.round}</p>
-        <div className="normal-text">Everyone choose the top {this.props.numAnswers}</div>
-        <div className="normal-text">based on the choices given!</div>
+      <div className={`rectangle ${this.props.state}`}>
+        <p className="round">Round {this.props.round + 1}</p>
+        <div className="normal-text">Everyone rank the top {this.props.numAnswers}</div>
+        <div className="normal-text">by dragging the choices on your phone!</div>
       </div>
         );
       }

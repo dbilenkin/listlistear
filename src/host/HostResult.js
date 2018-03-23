@@ -80,13 +80,13 @@ const SlideIn = props => (
       transform: "translate(0, 1000px)"
     }}
     enterStyle={{
-      transform: transit(`translate(0,-400px)`, 1500, "ease-in-out")
+      transform: transit(`translate(0,-500px)`, 1500, "ease-in-out")
     }}
     leaveStyle={{
       transform: transit("translate(0, 1000px)", 500, "ease-in-out")
     }}
     activeStyle={{
-      transform: `translate(0,-400px)`
+      transform: `translate(0,-500px)`
     }}
   />
 );
@@ -96,29 +96,31 @@ const HostResult = props => {
 
   return (
     <div>
-      <div className="round">Round {props.round} - Results</div>
-      <table className="result-table">
-        <tbody>
-          <tr key="resultkey" style={{ color: 'black' }}>
-            <td>Results</td>
-            <td>Points</td>
-            <td>Players</td>
-          </tr>
-          {props.results.slice(0, 5).map(result => (
-            <tr key={result[0]}>
-              <td>{result[0]}</td>
-              <td>{result[1].points}</td>
-              <td>{result[1].players.join(", ")}</td>
+      <div className={`rectangle ${props.state}`}>
+        <div className="round">Round {props.round} - Results</div>
+        <table className="result-table">
+          <tbody>
+            <tr key="resultkey" style={{ color: 'lightsalmon' }}>
+              <td>Results</td>
+              <td>Points</td>
+              <td>Players</td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {props.results.slice(0, 5).map(result => (
+              <tr key={result[0]}>
+                <td>{result[0]}</td>
+                <td>{result[1].points}</td>
+                <td>{result[1].players.join(", ")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <CSSTransitionGroup>
         {props.players.map((player, i) => (
           <SlideIn key={i}>
             <div key={player.name} className={`player-result player${i}-result`}>
-              <Paper className={classes.paper} style={{ color: player.color }}>
+              <div style={{ color: player.color }}>
                 <div>{player.name}'s Choices</div>
                 <div>{player.points} Points</div>
                 <hr />
@@ -127,7 +129,7 @@ const HostResult = props => {
                     {answer}
                   </div>
                 ))}
-              </Paper>
+              </div>
             </div>
           </SlideIn>
         ))}
