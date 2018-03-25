@@ -20,13 +20,19 @@ import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 
+const questions = [
+  "Favorite vacation destinations",
+  "Favorite Disney movies",
+  "Craziest sounding sandwiches",
+  "Best boardgames",
+  "Best Beatles Albums",
+  "Funniest Movies",
+  "Coolest Trees"
+];
+
 class PlayerGame extends Component {
   constructor(props) {
-    const questions = [
-      "What are your favorite vacation destinations?",
-      "What is your favorite Disney Movie?",
-      "Who is the best villain?"
-    ];
+
     console.log(props);
     super(props);
     this.gameRef = fire.database().ref(props.match.params.id);
@@ -68,6 +74,14 @@ class PlayerGame extends Component {
       let state = snapshot.child("state").val();
       console.log("PlayerGame state: " + state);
       console.log(this.props);
+
+      if (state === "question" || state === "wait.question") {
+        let questionsIn = snapshot
+          .child("questionsIn").val();
+
+        this.setState({ questionsIn: Boolean(questionsIn) });
+      }
+
       if (state !== this.state.state) {
         console.log("state change: " + JSON.stringify(this.state));
         console.log("answersSubmitted: " + this.state.answersSubmitted);
@@ -90,12 +104,7 @@ class PlayerGame extends Component {
           this.addPlayer();
         }
 
-        if (state === "question" || state === "wait.question") {
-          let questionsIn = snapshot
-            .child("questionsIn").val();
-
-          this.setState({ questionsIn: Boolean(questionsIn) });
-        }
+        
 
         let answers = null;
         let questions = null;
@@ -163,8 +172,7 @@ class PlayerGame extends Component {
     this.setState({ question: event.target.value });
   };
 
-  submitQuestion = e => {
-    let question = this.state.question;
+  addQuestion(question) {
     let questionsRef = this.gameRef.child("questions");
 
     questionsRef.child(question).push(this.state.key);
@@ -175,6 +183,17 @@ class PlayerGame extends Component {
       .push(question);
 
     this.gameRef.update({ state: "wait.question" });
+  }
+
+  noQuestion = e => {
+    let index = Math.floor(Math.random() * questions.length);
+    let question = questions.splice(index, 1)[0];
+    this.addQuestion(question);
+  }
+
+  submitQuestion = e => {
+    let question = this.state.question;
+    this.addQuestion(question);
   };
 
   changeChoice = event => {
@@ -324,6 +343,7 @@ class PlayerGame extends Component {
             {...this.state}
             changeQuestion={this.changeQuestion.bind(this)}
             submitQuestion={this.submitQuestion.bind(this)}
+            noQuestion={this.noQuestion.bind(this)}
           />
         )}
         {this.state.state === "choice" && (

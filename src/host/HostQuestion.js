@@ -8,7 +8,7 @@ class HostQuestion extends Component {
   render() {
     return (
       <div className={`rectangle ${this.props.state}`}>
-        <div className="normal-text">Think of a topic or question like...</div>
+        <div className="normal-text">Think of a list topic like...</div>
         <ul style={{textAlign: 'left'}}>
           <li className="normal-text">Favorite ice cream flavor</li>
           <li className="normal-text">Craziest made up sandwiches</li>

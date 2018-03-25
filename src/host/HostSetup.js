@@ -19,7 +19,9 @@ import {
 import Transition from "react-motion-ui-pack";
 //import Anime from "react-anime";
 import { Howl, Howler } from 'howler';
-import ReactHowler from 'react-howler'
+import ReactHowler from 'react-howler';
+import glasscrash from '../assets/sounds/glass-crash.wav';
+import music from '../assets/sounds/KnowingTwilight.mp3';
 
 CSSTransition.childContextTypes = {
   // this can be empty
@@ -99,34 +101,43 @@ class HostSetup extends Component {
 
   componentDidMount() {
 
-    // const sound = new Howl({
-    //   src: ['KnowingTwilight.mp3']
-    // });
+    const sound = new Howl({
+      src: [music]
+    }).play();
 
     // sound.once('load', function () {
     //   sound.play();
     // });
 
-    var audio = new Audio('/KnowingTwilight.mp3');
-    audio.play();
+
+  }
+
+  playCrash() {
+    if (this.props.players.length > 0) {
+      var audio = new Audio(glasscrash);
+      audio.play();
+
+    }
+
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <div className={"rectangle"}>
-        {/* <audio
+      <div>
+        <div className={"rectangle"}>
+          {/* <audio
           id="audio"
           src="KnowingTwilight.mp3"
           autoPlay>
           Your browser does not support the <code>audio</code> element.
         </audio> */}
-        {/* <ReactHowler
+          {/* <ReactHowler
           src='KnowingTwilight.mp3'
           playing={true}
         /> */}
-        <div className="names">
-          {/* <Anime
+          <div className="names">
+            {/* <Anime
             easing="easeOutElastic"
             duration={1000}
             direction="alternate"
@@ -150,37 +161,38 @@ class HostSetup extends Component {
             ))}
           </Anime> */}
 
-          <Transition
-            component="div" // don't use a wrapping component
-            enter={{
-              opacity: 1,
-              translateY: spring(0, { stiffness: 200, damping: 20 }),
-              translateX: spring(0, { stiffness: 200, damping: 20 }),
-              scale: spring(1, { stiffness: 200, damping: 20 })
-            }}
-            leave={{
-              opacity: 0,
-              translateY: -1000,
-              translateX: -1000,
-              scale: (10, 10)
-            }}
-          >
-            {this.props.players.map((player, i) => (
-              <div
-                key={player.id}
-                className="name"
-                style={{
-                  left: (i % 2) * 300 + "px",
-                  top: (Math.floor(i / 2) % 4) * 60 + "px",
-                  color: player.color
-                }}
-              >
-                {player.name}
-              </div>
-            ))}
-          </Transition>
+            <Transition
+              component="div" // don't use a wrapping component
+              onEnter={this.playCrash.bind(this)}
+              enter={{
+                opacity: 1,
+                translateY: spring(0, { stiffness: 200, damping: 20 }),
+                translateX: spring(0, { stiffness: 200, damping: 20 }),
+                scale: spring(1, { stiffness: 200, damping: 20 })
+              }}
+              leave={{
+                opacity: 0,
+                translateY: -1000,
+                translateX: -1000,
+                scale: (10, 10)
+              }}
+            >
+              {this.props.players.map((player, i) => (
+                <div
+                  key={player.id}
+                  className="name"
+                  style={{
+                    left: (i % 2) * 300 + "px",
+                    top: (Math.floor(i / 2) % 4) * 60 + "px",
+                    color: player.color
+                  }}
+                >
+                  {player.name}
+                </div>
+              ))}
+            </Transition>
 
-          {/* <CSSTransitionGroup>
+            {/* <CSSTransitionGroup>
             {this.props.players.map((player, i) => (
               <FadeInOut key={player.id}>
                 <div
@@ -194,7 +206,12 @@ class HostSetup extends Component {
               </FadeInOut>
             ))}
           </CSSTransitionGroup> */}
+          </div>
         </div>
+        {this.props.players.length > 2 &&
+          <div>
+            <div className="start-text">{this.props.firstPlayer.name}, start the game <br /> when everyone is in!</div>
+          </div>}
       </div>
     );
   }

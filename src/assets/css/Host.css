@@ -17,8 +17,9 @@
 .back-button {
   font-family: "CoveredByYourGrace";
   font-size: 70px;
-  color: transparent;
-  text-shadow: 5px 5px 3px whitesmoke;
+  color: whitesmoke;
+  filter: blur(1px);
+  text-shadow: 5px 5px 3px black;
   position: absolute;
   text-decoration: none;
   left: 100px;
@@ -53,6 +54,14 @@
   z-index: 100;
   color: antiquewhite;
   font-family: armalite;
+}
+
+.start-text {
+  font-family: CoveredByYourGrace;
+  font-size: 60px;
+  filter: blur(1px);
+  color: whitesmoke;
+  text-shadow: 5px 5px 3px black;
 }
 
 .button {
@@ -105,7 +114,7 @@
   color: antiquewhite;
   position: relative;
   width: 600px;
-  height: 400px;
+  height: 300px;
 	padding: 20px;
   margin: 0 auto;
   margin-top: 30px;

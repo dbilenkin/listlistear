@@ -26,8 +26,8 @@ class HostGame extends Component {
       "lawngreen",
       "yellow",
       "pink",
-      "cadetblue",
-      "lightslategray"
+      "orangered",
+      "lightgray"
     ];
 
     console.log(props);

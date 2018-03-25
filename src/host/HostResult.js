@@ -80,13 +80,13 @@ const SlideIn = props => (
       transform: "translate(0, 1000px)"
     }}
     enterStyle={{
-      transform: transit(`translate(0,-500px)`, 1500, "ease-in-out")
+      transform: transit(`translate(0,-425px)`, 1500, "ease-in-out")
     }}
     leaveStyle={{
       transform: transit("translate(0, 1000px)", 500, "ease-in-out")
     }}
     activeStyle={{
-      transform: `translate(0,-500px)`
+      transform: `translate(0,-425px)`
     }}
   />
 );
@@ -115,6 +115,9 @@ const HostResult = props => {
           </tbody>
         </table>
       </div>
+        <div>
+          <div className="start-text">{props.firstPlayer.name}, start the next round!</div>
+        </div>
 
       <CSSTransitionGroup>
         {props.players.map((player, i) => (

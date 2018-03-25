@@ -13,7 +13,7 @@ class PlayerQuestion extends Component {
     return (
       <div>
         <h2>Alright, {this.props.name}</h2>
-        <h3>Come up with a topic or question!</h3>
+        <h3>Come up with a list topic!</h3>
 
         <TextField
           style={{width: '300px'}}
@@ -22,6 +22,7 @@ class PlayerQuestion extends Component {
           onChange={this.props.changeQuestion}
           autoFocus={true}
         />
+        <br />
         <Button
           variant="raised"
           label="{title}"
@@ -30,6 +31,15 @@ class PlayerQuestion extends Component {
           onClick={this.props.submitQuestion}
         >
           Submit Question
+        </Button>
+        <Button
+          variant="raised"
+          label="{title}"
+          color="primary"
+          style={{ margin: 12 }}
+          onClick={this.props.noQuestion}
+        >
+          I'm Stumped
         </Button>
 
       </div>
