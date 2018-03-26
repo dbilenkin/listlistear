@@ -39,7 +39,7 @@ const HostWait = props => {
             <div className="normal-text">{props.firstPlayer.name}, start the first round!</div>
           </div>
         )}
-        {(waitType === 'questions' && !props.questionsIn) || waitType === 'answers' && (
+        {((waitType === 'questions' && !props.questionsIn) || waitType === 'answers') && (
           <div className="normal-text">Waiting for everyone to finish...</div>
         )}
       </div>

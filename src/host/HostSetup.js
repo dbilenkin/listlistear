@@ -18,10 +18,10 @@ import {
 } from "react-css-transition";
 import Transition from "react-motion-ui-pack";
 //import Anime from "react-anime";
-import { Howl, Howler } from 'howler';
-import ReactHowler from 'react-howler';
-import glasscrash from '../assets/sounds/glass-crash.wav';
-import music from '../assets/sounds/KnowingTwilight.mp3';
+import { Howl, Howler } from "howler";
+import ReactHowler from "react-howler";
+import glasscrash from "../assets/sounds/glass-crash.wav";
+import music from "../assets/sounds/KnowingTwilight.mp3";
 
 CSSTransition.childContextTypes = {
   // this can be empty
@@ -100,7 +100,6 @@ class HostSetup extends Component {
   }
 
   componentDidMount() {
-
     const sound = new Howl({
       src: [music]
     }).play();
@@ -108,24 +107,30 @@ class HostSetup extends Component {
     // sound.once('load', function () {
     //   sound.play();
     // });
-
-
   }
 
   playCrash() {
     if (this.props.players.length > 0) {
       var audio = new Audio(glasscrash);
       audio.play();
-
     }
-
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div>
-        <div className={"rectangle"}>
+        <div className="rectangle">
+          <div className="join-text">
+            Join the game at{" "}
+            <span className="highlight"> listlistear.firebaseapp.com </span>
+            <br />
+            and type in <span className="highlight">
+              {this.props.gameId}
+            </span>{" "}
+            for the Game Id.
+          </div>
+
           {/* <audio
           id="audio"
           src="KnowingTwilight.mp3"
@@ -208,10 +213,15 @@ class HostSetup extends Component {
           </CSSTransitionGroup> */}
           </div>
         </div>
-        {this.props.players.length > 2 &&
+
+        {this.props.players.length > 2 && (
           <div>
-            <div className="start-text">{this.props.firstPlayer.name}, start the game <br /> when everyone is in!</div>
-          </div>}
+            <div className="start-text">
+              {this.props.firstPlayer.name}, start the game <br /> when everyone
+              is in!
+            </div>
+          </div>
+        )}
       </div>
     );
   }
