@@ -9,50 +9,9 @@ import Table, {
   TableHead,
   TableRow
 } from "material-ui/Table";
-import {
-  CSSTransitionGroup,
-  CSSTransition,
-  transit
-} from "react-css-transition";
+import { Motion, spring } from "react-motion";
+import Transition from "react-motion-ui-pack";
 
-CSSTransition.childContextTypes = {
-  // this can be empty
-};
-
-const pos = [
-  {
-    top: "100px",
-    left: "50px"
-  },
-  {
-    top: "300px",
-    left: "50px"
-  },
-  {
-    top: "500px",
-    left: "50px"
-  },
-  {
-    top: "500px",
-    left: "400px"
-  },
-  {
-    top: "500px",
-    left: "750px"
-  },
-  {
-    top: "500px",
-    left: "1100px"
-  },
-  {
-    top: "300px",
-    left: "1100px"
-  },
-  {
-    top: "100px",
-    left: "1100px"
-  }
-]
 
 const styles = theme => ({
   root: {
@@ -73,29 +32,25 @@ const styles = theme => ({
   }
 });
 
-const SlideIn = props => (
-  <CSSTransition
-    {...props}
-    defaultStyle={{
-      transform: "translate(0, 1000px)"
-    }}
-    enterStyle={{
-      transform: transit(`translate(0,-425px)`, 1500, "ease-in-out")
-    }}
-    leaveStyle={{
-      transform: transit("translate(0, 1000px)", 500, "ease-in-out")
-    }}
-    activeStyle={{
-      transform: `translate(0,-425px)`
-    }}
-  />
-);
 
 const HostResult = props => {
   const { classes } = props;
 
   return (
     <div>
+
+      <div className="flip-container">
+        <div className="flipper">
+          <div className="front">
+            front
+		</div>
+          <div className="back">
+            back
+		</div>
+        </div>
+      </div>
+
+
       <div className={`rectangle ${props.state}`}>
         <div className="round">Round {props.round} - Results</div>
         <table className="result-table">
@@ -115,28 +70,43 @@ const HostResult = props => {
           </tbody>
         </table>
       </div>
-        <div>
-          <div className="start-text">{props.firstPlayer.name}, start the next round!</div>
-        </div>
+      <div>
+        <div className="start-text">{props.firstPlayer.name}, start the next round!</div>
+      </div>
 
-      <CSSTransitionGroup>
+      <Transition
+        component="div" // don't use a wrapping component
+        //onEnter={this.playCrash.bind(this)}
+        enter={{
+          opacity: 1,
+          translateY: spring(0, { stiffness: 200, damping: 20 }),
+          //translateX: spring(0, { stiffness: 200, damping: 20 }),
+          //scale: spring(1, { stiffness: 200, damping: 20 })
+        }}
+        leave={{
+          opacity: 0,
+          translateY: 1000,
+          //translateX: -1000,
+          //scale: (20, 20)
+        }}
+      >
         {props.players.map((player, i) => (
-          <SlideIn key={i}>
-            <div key={player.name} className={`player-result player${i}-result`}>
-              <div style={{ color: player.color }}>
-                <div>{player.name}'s Choices</div>
-                <div>{player.points} Points</div>
-                <hr />
-                {player.answers[props.round].slice(0, 3).map(answer => (
-                  <div key={answer}>
-                    {answer}
-                  </div>
-                ))}
-              </div>
+
+          <div key={player.name} className={`player-result player${i}-result`}>
+            <div style={{ color: player.color }}>
+              <div>{player.name}'s Choices</div>
+              <div>{player.points} Points</div>
+              <hr />
+              {player.answers[props.round].slice(0, 3).map(answer => (
+                <div key={answer}>
+                  {answer}
+                </div>
+              ))}
             </div>
-          </SlideIn>
+          </div>
         ))}
-      </CSSTransitionGroup>
+      </Transition>
+
     </div>
   );
 };

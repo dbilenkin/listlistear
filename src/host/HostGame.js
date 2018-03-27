@@ -82,7 +82,7 @@ class HostGame extends Component {
         .ref(this.state.gameId)
         .update({ questionsIn: "true" });
 
-      this.setState({questionsIn: true});
+      this.setState({ questionsIn: true });
     }
   };
 
@@ -105,6 +105,11 @@ class HostGame extends Component {
         .update({ state: "result" });
     }
   };
+
+  startAnswers() {
+    let gameRef = fire.database().ref(this.state.gameId);
+    gameRef.update({ state: "answer" });
+  }
 
   /**
    * 50 points for 1st
@@ -147,7 +152,7 @@ class HostGame extends Component {
       let playersSnapshot = snapshot.child("players");
       let playerCount = 0;
       let that = this;
-      playersSnapshot.forEach(function(player) {
+      playersSnapshot.forEach(function (player) {
         newplayers.push({
           name: player.val().name,
           points: player.val().points,
@@ -158,7 +163,7 @@ class HostGame extends Component {
           id: player.key
         });
         if (playerCount === 0) {
-          that.setState({firstPlayer: newplayers[0]})
+          that.setState({ firstPlayer: newplayers[0] })
         }
         playerCount++;
       });
@@ -166,7 +171,7 @@ class HostGame extends Component {
 
       let newchoices = [];
       let choicesSnapshot = snapshot.child("choices").child(this.state.round);
-      choicesSnapshot.forEach(function(choice) {
+      choicesSnapshot.forEach(function (choice) {
         newchoices.push({
           choice: choice.key,
           playerKeys: choice.val()
@@ -176,7 +181,7 @@ class HostGame extends Component {
 
       let newquestions = [];
       let questionsSnapshot = snapshot.child("questions");
-      questionsSnapshot.forEach(function(question) {
+      questionsSnapshot.forEach(function (question) {
         newquestions.push({
           question: question.key,
           playerKeys: question.val()
@@ -205,14 +210,14 @@ class HostGame extends Component {
     stateRef.on("value", snapshot => {
       let state = snapshot.val();
 
-      if (state === "choice") {
-        let that = this;
-        answerTimer = setTimeout(() => {
-          if (that.state.state === "choice") {
-            gameRef.update({ state: "answer" });
-          }
-        }, this.state.choiceTime * 1000);
-      }
+      // if (state === "choice") {
+      //   let that = this;
+      //   answerTimer = setTimeout(() => {
+      //     if (that.state.state === "choice") {
+      //       gameRef.update({ state: "answer" });
+      //     }
+      //   }, this.state.choiceTime * 1000);
+      // }
 
       if (state === "result") {
         setTimeout(() => this.calculateResults(), 100);
@@ -232,14 +237,14 @@ class HostGame extends Component {
   }
   render() {
     return (
-      <div className="container">     
+      <div className="container">
         <a href="/host" className="back-button">
           Back
         </a>
         <div className="title game-title">Game {this.state.gameId}</div>
         {this.state.state === "setup" && <HostSetup {...this.state} />}
         {this.state.state === "question" && <HostQuestion {...this.state} />}
-        {this.state.state === "choice" && <HostChoice {...this.state} />}
+        {this.state.state === "choice" && <HostChoice {...this.state} startAnswers={this.startAnswers.bind(this)} />}
         {this.state.state === "answer" && <HostAnswer {...this.state} />}
         {this.state.state.split(".")[0] === "wait" && (
           <HostWait {...this.state} />

@@ -9,7 +9,13 @@ class PlayerChoice extends Component {
     super(props);
   }
 
+
+  componentDidUpdate() {
+    document.getElementById('choiceInput').focus();
+  }
+
   render() {
+
     return (
       <div>
 
@@ -18,6 +24,7 @@ class PlayerChoice extends Component {
         <h3>{this.props.questions[this.props.round]}</h3>
 
         <TextField
+          id='choiceInput'
           label="Type Something"
           value={this.props.choice}
           onChange={this.props.changeChoice}

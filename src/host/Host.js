@@ -15,8 +15,6 @@ class Host extends Component {
     this.state = {
       gameId: id
     };
-
-    //this.handlePickGame = this.handlePickGame.bind(this);
   }
 
   render() {

@@ -28,6 +28,7 @@ const JoinButton = props => (
 
 const JoinGame = parentProps => (
   <div>
+    <br />
     <TextField
       label="Game Id"
       value={parentProps.gameId}

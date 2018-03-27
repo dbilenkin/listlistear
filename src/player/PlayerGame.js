@@ -104,7 +104,7 @@ class PlayerGame extends Component {
           this.addPlayer();
         }
 
-        
+
 
         let answers = null;
         let questions = null;
@@ -140,9 +140,11 @@ class PlayerGame extends Component {
         }
 
         if (
-          state === "wait.answer" ||
-          state === "choice" ||
-          state === "answer"
+          (
+            state === "answer" ||
+            state === "wait.answer" ||
+            state === "choice"
+          ) && this.state.choices.length != allChoices.length
         ) {
           this.setState({ choices: allChoices, answers: allChoices });
         }
@@ -193,6 +195,11 @@ class PlayerGame extends Component {
 
   submitQuestion = e => {
     let question = this.state.question;
+    if (!question.trim()) {
+      this.noQuestion();
+      return;
+    }
+
     this.addQuestion(question);
   };
 
@@ -204,6 +211,11 @@ class PlayerGame extends Component {
     let choice = this.state.choice
       .replace(/[^\w\s]|_/g, "")
       .replace(/\s+/g, " ");
+
+    if (!choice.trim()) {
+      return;
+    }
+
     this.setState({ choice: "" });
 
     let choicesRef = this.gameRef.child("choices").child(this.state.round);
@@ -296,12 +308,13 @@ class PlayerGame extends Component {
   };
 
   startRound = () => {
+    this.setState({ choice: "" });
     this.gameRef.update({ state: "choice" });
   }
 
   nextRound = () => {
     let nextRound = this.state.round + 1;
-    this.setState({ round: nextRound });
+    this.setState({ round: nextRound, choice: "" });
     this.gameRef.update({ state: "choice", round: nextRound });
   };
 

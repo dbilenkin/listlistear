@@ -13,7 +13,8 @@ class PlayerWait extends Component {
     return (
       <div>
         <h2>Hi, {this.props.name}</h2>
-        <h3>Waiting for other players to answer.</h3>
+        {!props.questionsIn && (<h3>Waiting for other players.</h3>)}
+        {props.questionsIn && (<h3>All topics are in.</h3>)}
         {props.state === "wait.question" && props.firstPlayer && props.questionsIn && (
           <Button
             variant="raised"
