@@ -246,10 +246,10 @@ class HostGame extends Component {
         {this.state.state === "question" && <HostQuestion {...this.state} />}
         {this.state.state === "choice" && <HostChoice {...this.state} startAnswers={this.startAnswers.bind(this)} />}
         {this.state.state === "answer" && <HostAnswer {...this.state} />}
-        {this.state.state.split(".")[0] === "wait" && (
+        {this.state.state === "wait.question" && (
           <HostWait {...this.state} />
         )}
-        {this.state.state === "result" && <HostResult {...this.state} />}
+        {(this.state.state === "result" || this.state.state === "wait.answer") && <HostResult {...this.state} />}
         {this.state.state === "finish" && <HostFinish {...this.state} />}
       </div>
     );
