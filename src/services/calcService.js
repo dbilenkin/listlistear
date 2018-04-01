@@ -41,6 +41,4 @@ const calculateResults = (players, choices, round) => {
 
 }
 
-module.exports = {
-  calculateResults: calculateResults
-}
+export { calculateResults }

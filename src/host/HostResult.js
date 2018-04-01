@@ -32,66 +32,82 @@ const styles = theme => ({
   }
 });
 
-const HostResult = props => {
-  const { classes } = props;
+class HostResult extends Component {
 
-  let waitType = "answers";
+  constructor(props) {
+    console.log("HostSetup: " + JSON.stringify(props));
+    super(props);
+    this.state = {
+      flip: "",
+      playerFlip: [...Array(props.players.length)].map(e => '')
+    }
+    this.flipped = false;
+  }
 
-  return (
-    <div>
-      <div className={`flip-container ${props.state}`}>
-        <div className="flipper">
-          <div className={`front rectangle ${waitType}`}>
-            {waitType === "questions" && <p className="round">Categories</p>}
-            {waitType === "answers" && (
-              <p className="round">Round {props.round + 1} - Results</p>
-            )}
-            {props.state === "wait.question" &&
-              props.questionsIn && (
-                <div>
-                  <div className="normal-text">All questions are in.</div>
-                  <div className="normal-text">
-                    {props.firstPlayer.name}, start the first round!
-                  </div>
-                </div>
-              )}
-            {((waitType === "questions" && !props.questionsIn) ||
-              waitType === "answers") && (
+  componentDidUpdate() {
+
+    if (!this.flipped && this.props.players.length > 0 && this.props.state === "result") {
+      this.flipped = true;
+      setTimeout(() => {
+        console.log("players: " + this.props.players.length);
+        this.setState({ flip: "flip" });   
+      }, this.props.players.length * 500);
+
+      this.props.players.forEach((player, i) => {
+        setTimeout(() => {
+          let playerFlip = [...this.state.playerFlip];
+          playerFlip[i] = "flip";
+          this.setState({ playerFlip: playerFlip });
+        }, i * 500);
+      })
+    }
+
+  }
+
+
+
+  render() {
+    const props = this.props;
+
+    return (
+      <div>
+        <div className={`flip-container ${this.state.flip}`}>
+          <div className="flipper">
+            <div className={`front rectangle`}>
+              <p className="round">Round {props.round + 1}</p>
               <div className="normal-text">
                 Waiting for everyone to finish...
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className={`back rectangle ${props.state}`}>
-            <div className="round">Round {props.round} - Results</div>
-            <table className="result-table">
-              <tbody>
-                <tr key="resultkey" style={{ color: "lightsalmon" }}>
-                  <td>Results</td>
-                  <td>Points</td>
-                  <td>Players</td>
-                </tr>
-                {props.results.slice(0, 5).map(result => (
-                  <tr key={result[0]}>
-                    <td>{result[0]}</td>
-                    <td>{result[1].points}</td>
-                    <td>{result[1].players.join(", ")}</td>
+            <div className={`back rectangle`}>
+              <div className="round">Round {props.round} - Results</div>
+              <table className="result-table">
+                <tbody>
+                  <tr key="resultkey" style={{ color: "lightsalmon" }}>
+                    <td>Results</td>
+                    <td>Points</td>
+                    <td>Players</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                  {props.results.slice(0, 5).map(result => (
+                    <tr key={result[0]}>
+                      <td>{result[0]}</td>
+                      <td>{result[1].points}</td>
+                      <td>{result[1].players.join(", ")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <div className="start-text">
-          {props.firstPlayer.name}, start the next round!
+        <div>
+          <div className="start-text">
+            {props.firstPlayer.name}, start the next round!
         </div>
-      </div>
+        </div>
 
-      {props.state === "result" && (
         <Transition
           component="div" // don't use a wrapping component
           //onEnter={this.playCrash.bind(this)}
@@ -110,21 +126,21 @@ const HostResult = props => {
         >
           {props.players
             .filter(player => {
-              return player[waitType] && player[waitType][props.round];
+              return player['answers'] && player['answers'][props.round];
             })
             .map((player, i) => (
-              <div key={player.name} className={`player-flip-container ${props.state}`}>
-                <div className="player-flipper">
+              <div key={player.name} className={`flip-container player-container player${i}-result ${this.state.playerFlip[i]}`}>
+                <div className="flipper">
                   <div
-                    
-                    className={`player-result player${i}-result`}
+
+                    className={`front player-result`}
                   >
                     <div style={{ color: player.color }}>
                       <div>{player.name}</div>
                     </div>
                   </div>
                   <div
-                    className={`player-result player${i}-result`}
+                    className={`back player-result`}
                   >
                     <div style={{ color: player.color }}>
                       <div>{player.name}'s Choices</div>
@@ -139,10 +155,11 @@ const HostResult = props => {
               </div>
             ))}
         </Transition>
-      )}
-    </div>
-  );
-};
+
+      </div>
+    );
+  }
+}
 
 HostResult.propTypes = {
   classes: PropTypes.object.isRequired

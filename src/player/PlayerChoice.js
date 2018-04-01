@@ -37,7 +37,7 @@ class PlayerChoice extends Component {
           style={{ margin: 12 }}
           onClick={this.props.submitChoice}
         >
-          Submit Choice
+          Submit
         </Button>
 
       </div>

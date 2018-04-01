@@ -5,7 +5,7 @@
 
 /* flip the pane when hovered */
 .flip-container:hover .flipper,
-.flip-container.result .flipper {
+.flip-container.flip .flipper {
   transform: rotateY(180deg);
 }
 
@@ -44,4 +44,11 @@
 /* back, initially hidden pane */
 .back {
   transform: rotateY(180deg);
+}
+
+.player-container {
+  top: 0px;
+  position: absolute;
+  width: 300px;
+  height: 200px;
 }

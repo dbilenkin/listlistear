@@ -10,14 +10,13 @@ class HostChoice extends Component {
   }
 
   componentDidMount() {
-    let interval = setInterval(() => {
+    this.interval = setInterval(() => {
       console.log(this.state.time);
       if (this.state.time <= 0) {
-        window.clearInterval(interval);
+        window.clearInterval(this.interval);
         this.props.startAnswers();
         return;
-      }
-      if (this.state.time < 10) {
+      } else if (this.state.time < 10) {
         this.setState({ color: 'red' });
       } else if (this.state.time < 20) {
         this.setState({ color: 'yellow' });
@@ -25,6 +24,10 @@ class HostChoice extends Component {
       this.setState({ time: this.state.time - .1 })
     }, 100);
 
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
 
   render() {

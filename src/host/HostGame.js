@@ -9,7 +9,7 @@ import HostResult from "./HostResult";
 import HostFinish from "./HostFinish";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { calculateResults } from "../services/calcService";
-import "../assets/css/Host.css";
+//import "../assets/css/Host.css";
 
 class HostGame extends Component {
   constructor(props) {

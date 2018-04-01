@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Paper from "material-ui/Paper";
 import { withStyles } from "material-ui/styles";
 import PropTypes from "prop-types";
+import { PlayerCard } from "./components/PlayerCard";
 
 const styles = theme => ({
   root: {
@@ -50,14 +51,10 @@ const HostWait = props => {
           }
           return player[waitType] && player[waitType][props.round]
         }).map((player, i) => (
-          <div key={player.name} className={`player-result player${i}-result`}>
-            <div style={{ color: player.color }}>
-              <div>{player.name}</div>
-              <div>{player.points} Points</div>
-              <hr />
-
-            </div>
-          </div>
+          <PlayerCard key={i} player={player} i={i} >
+            <div>{player.name}</div>
+            <div>Ready!</div>
+          </PlayerCard>
         ))}
     </div>
   );

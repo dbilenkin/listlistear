@@ -1,11 +1,13 @@
 .title {
   text-align: center;
   position: relative;
-  font-family: "punk-kid";
+  font-family: "armalite";
   font-size: 200px;
-  color: transparent;
+  color: yellow;
   top: 15px;
-  text-shadow: 5px 5px 5px yellow;
+  filter: blur(1px);
+  opacity: .9;
+  text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black;
 }
 
 .game-title {
@@ -17,12 +19,16 @@
   font-size: 70px;
   color: whitesmoke;
   filter: blur(1px);
-  text-shadow: 5px 5px 3px black;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
   position: absolute;
   text-decoration: none;
   left: 100px;
   cursor: pointer;
   z-index: 100;
+}
+
+.back-button:hover {
+  color: yellowgreen;
 }
 
 .names {
@@ -131,36 +137,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
-.rectangle:before,
-.rectangle:after {
-  position: absolute;
-  width: 40%;
-  height: 40px;
-  content: " ";
-  left: 12px;
-  bottom: 12px;
-  background: transparent;
-  -webkit-transform: skew(-5deg) rotate(-5deg);
-  -moz-transform: skew(-5deg) rotate(-5deg);
-  -ms-transform: skew(-5deg) rotate(-5deg);
-  -o-transform: skew(-5deg) rotate(-5deg);
-  transform: skew(-5deg) rotate(-5deg);
-  -webkit-box-shadow: 0 22px 12px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 22px 12px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 12px 12px rgba(0, 0, 0, 0.3);
-  z-index: -1;
-}
-
-.rectangle:after {
-  left: auto;
-  right: 12px;
-  -webkit-transform: skew(5deg) rotate(5deg);
-  -moz-transform: skew(5deg) rotate(5deg);
-  -ms-transform: skew(5deg) rotate(5deg);
-  -o-transform: skew(5deg) rotate(5deg);
-  transform: skew(5deg) rotate(5deg);
-}
-
 .rectangle.question {
   height: 250px;
 }
@@ -194,7 +170,8 @@
 }
 
 .player-result {
-  width: 200px;
+  width: 20%;
+  height: 200px;
   position: absolute;
   -webkit-box-shadow: 5px 5px 25px;
   box-shadow: 5px 5px 25px;
@@ -206,35 +183,35 @@
 
 .player0-result {
   top: 100px;
-  left: 50px;
+  left: 5%;
 }
 .player1-result {
-  top: 300px;
-  left: 50px;
+  top: 350px;
+  left: 5%;
 }
 .player2-result {
-  top: 500px;
-  left: 50px;
+  top: 600px;
+  left: 5%;
 }
 .player3-result {
-  top: 500px;
-  left: 400px;
+  top: 600px;
+  left: 28.5%;
 }
 .player4-result {
-  top: 500px;
-  left: 750px;
+  top: 600px;
+  right: 28.5%;
 }
 .player5-result {
-  top: 500px;
-  left: 1100px;
+  top: 600px;
+  right: 5%;
 }
 .player6-result {
-  top: 300px;
-  left: 1100px;
+  top: 350px;
+  right: 5%;
 }
 .player7-result {
   top: 100px;
-  left: 1100px;
+  right: 5%;
 }
 
 @font-face {
