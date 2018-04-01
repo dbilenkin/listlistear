@@ -14,9 +14,6 @@ class HostAnswer extends Component {
           <div className="normal-text">Everyone rank the top {this.props.numAnswers}</div>
           <div className="normal-text">by dragging the choices on your phone!</div>
         </div>
-        <div className="timer-holder">
-          <div style={{width: 100 + '%', background: 'green'}} id="timer-bar" />
-        </div>
       </div>
     );
   }

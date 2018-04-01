@@ -43,7 +43,7 @@ class HostGame extends Component {
       round: 0,
       numAnswers: 3,
       numChoices: 10,
-      choiceTime: 30,
+      choiceTime: 60,
       maxPlayers: 8,
       gameId: props.match.params.id,
       firstPlayer: ''
