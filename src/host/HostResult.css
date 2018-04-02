@@ -12,7 +12,7 @@
 .flip-container,
 .front,
 .back {
-  width: 600px;
+  width: 45%;
   height: 400px;
   margin-top: 20px;
   margin: auto;
@@ -49,6 +49,6 @@
 .player-container {
   top: 0px;
   position: absolute;
-  width: 300px;
+  width: 20%;
   height: 200px;
 }

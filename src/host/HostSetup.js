@@ -55,7 +55,7 @@ class HostSetup extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <div className="rectangle">
+        <div className="rectangle setup">
           <div className="join-text">
             Join the game at{" "}
             <span className="highlight"> listlistear.firebaseapp.com </span>

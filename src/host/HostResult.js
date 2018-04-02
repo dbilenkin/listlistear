@@ -73,14 +73,14 @@ class HostResult extends Component {
       <div>
         <div className={`flip-container ${this.state.flip}`}>
           <div className="flipper">
-            <div className={`front rectangle`}>
+            <div className={`front rectangle result`}>
               <p className="round">Round {props.round + 1}</p>
               <div className="normal-text">
                 Waiting for everyone to finish...
               </div>
             </div>
 
-            <div className={`back rectangle`}>
+            <div className={`back rectangle result`}>
               <div className="round">Round {props.round} - Results</div>
               <table className="result-table">
                 <tbody>
@@ -89,7 +89,7 @@ class HostResult extends Component {
                     <td>Points</td>
                     <td>Players</td>
                   </tr>
-                  {props.results.slice(0, 5).map(result => (
+                  {props.results.slice(0, 10).map(result => (
                     <tr key={result[0]}>
                       <td>{result[0]}</td>
                       <td>{result[1].points}</td>

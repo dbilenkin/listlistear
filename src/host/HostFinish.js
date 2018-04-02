@@ -37,7 +37,7 @@ const HostFinish = props => {
       <p className="round">Game Over!</p>
       <table className="result-table">
         <tbody>
-          <tr key="resultkey" style={{ color: 'black' }}>
+          <tr key="resultkey" style={{ color: "lightsalmon" }}>
             <td>Rank</td>
             <td>Player</td>
             <td>Points</td>

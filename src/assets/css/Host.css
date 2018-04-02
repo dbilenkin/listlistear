@@ -124,7 +124,7 @@
 
 .rectangle {
   color: antiquewhite;
-  width: 600px;
+  width: 45%;
   height: 350px;
   padding: 20px;
   margin: 0 auto;
@@ -137,8 +137,14 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
+.rectangle.result {
+  width: 100%;
+}
+
+
 .rectangle.question {
   height: 250px;
+  width: 45%;
 }
 
 .rectangle.finish {
@@ -148,6 +154,7 @@
 .rectangle.answers,
 .rectangle.questions {
   height: 350px;
+  width: 45%;
 }
 
 .rectangle.answer {
@@ -156,13 +163,18 @@
 
 .rectangle.start {
   height: 155px;
+  width: 45%;
+}
+
+.rectangle.setup {
+  height: 350px;
+  width: 45%;
 }
 
 .result-table {
   margin: auto;
   width: 500px;
   position: relative;
-  margin-top: 50px;
   text-align: left;
   font-size: 20px;
   color: antiquewhite;
